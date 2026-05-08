@@ -1,0 +1,17 @@
+{
+  "name": "glance-layered-flow",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite"
+  },
+  "keywords": [],
+  "author": "Glance",
+  "license": "ISC",
+  "description": "A dynamic scroll animation featuring layered, sticky panels with smooth transitions.",
+  "dependencies": {
+    "gsap": "^3.14.2",
+    "lenis": "^1.3.17",
+    "vite": "^7.3.1"
+  }
+}

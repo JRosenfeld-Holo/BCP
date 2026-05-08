@@ -1,0 +1,13 @@
+{
+  "name": "Scroll Sticky Cards",
+  "version": "1.0.0",
+  "author": "Glance",
+  "url": "https://glance.thyonix.com",
+  "framework": "vite",
+  "tags": [
+    "gsap",
+    "lenis"
+  ],
+  "license": "proprietary",
+  "created": "2026"
+}
