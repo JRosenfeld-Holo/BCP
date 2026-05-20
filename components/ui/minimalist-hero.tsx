@@ -35,9 +35,6 @@ export const MinimalistHero = ({
   const { scrollY } = useScroll();
 
   const imageOpacity = useTransform(scrollY, [0, 350], [1, 0]);
-  const leftX = useTransform(scrollY, [0, 350], ['0%', '55%']);
-  const rightX = useTransform(scrollY, [0, 350], ['0%', '-55%']);
-  const textOpacityFade = useTransform(scrollY, [200, 350], [1, 0.4]);
 
   return (
     <div
@@ -108,7 +105,6 @@ export const MinimalistHero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1 }}
-          style={{ x: leftX, opacity: textOpacityFade }}
           className="flex items-center justify-start"
         >
           <h1 className="text-7xl font-extrabold text-foreground lg:text-9xl leading-none">
@@ -138,7 +134,6 @@ export const MinimalistHero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.2 }}
-          style={{ x: rightX, opacity: textOpacityFade }}
           className="flex items-center justify-start"
         >
           <h2 className="text-5xl font-extrabold text-foreground lg:text-6xl leading-tight">
