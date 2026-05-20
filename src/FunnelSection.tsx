@@ -241,7 +241,7 @@ export function FunnelSection() {
 
       {/* Overlay: bottom headline */}
       <div className="absolute bottom-0 inset-x-0 pb-16 flex flex-col items-center pointer-events-none">
-        <h2 className="text-5xl md:text-7xl font-black font-display tracking-tighter uppercase text-center leading-none">
+        <h2 className="text-3xl md:text-5xl lg:text-7xl font-black font-display tracking-tighter uppercase text-center leading-none">
           Start the<br /><span className="text-gradient-animate">Conversation.</span>
         </h2>
 

@@ -260,7 +260,7 @@ function Navbar({ onContact }: { onContact: () => void }) {
               <a href="#about" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">About</a>
               <a href="#services" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">Services</a>
               <a href="#work" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">Work</a>
-              <button onClick={onContact} className="bg-[#2563EB] text-white rounded-full px-4 py-[7px] hover:opacity-80 transition-opacity duration-200 cursor-pointer">Let's Talk</button>
+              <button onClick={onContact} className="bg-[#2563EB] text-white rounded-full px-4 py-2 hover:opacity-80 transition-opacity duration-200 cursor-pointer">Let's Talk</button>
             </div>
           </motion.div>
         </div>
@@ -441,7 +441,7 @@ function AboutSection() {
                 <div className="text-2xl md:text-3xl font-black font-display tracking-tighter accent-text leading-none mb-1">
                   {stat.value}
                 </div>
-                <div className="text-[9px] uppercase tracking-[0.2em] opacity-50">
+                <div className="text-[11px] uppercase tracking-[0.2em] opacity-50">
                   {stat.label}
                 </div>
               </motion.div>
@@ -453,7 +453,7 @@ function AboutSection() {
             <p className="text-[8px] uppercase tracking-[0.4em] opacity-40 mb-3">As Featured In</p>
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               {press.map(pub => (
-                <span key={pub} className="text-[11px] font-bold uppercase tracking-widest opacity-25 hover:opacity-60 transition-opacity duration-200 cursor-default">{pub}</span>
+                <span key={pub} className="text-xs font-bold uppercase tracking-widest opacity-25 hover:opacity-60 transition-opacity duration-200 cursor-default">{pub}</span>
               ))}
             </div>
           </div>
@@ -465,7 +465,7 @@ function AboutSection() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full md:w-2/5 relative shrink-0 min-h-[480px] md:min-h-0 overflow-hidden"
+          className="w-full md:w-2/5 relative shrink-0 min-h-[320px] md:min-h-0 overflow-hidden"
           style={{
             WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 28%, black 100%), linear-gradient(to bottom, transparent 0%, black 15%, black 82%, transparent 100%)',
             WebkitMaskComposite: 'source-in',
@@ -858,7 +858,7 @@ function ContactSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-2xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_32px_64px_rgba(0,0,0,0.5)] p-10 md:p-14"
+          className="rounded-2xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_32px_64px_rgba(0,0,0,0.5)] p-6 md:p-14"
         >
           {submitted ? (
             <motion.div
@@ -875,12 +875,12 @@ function ContactSection() {
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10 mb-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 md:gap-x-16 gap-y-8 md:gap-y-10 mb-8 md:mb-10">
                 <Field id="name" label="Full Name" placeholder="Your name" required />
                 <Field id="email" label="Email" type="email" placeholder="you@company.com" required />
                 <Field id="company" label="Company" placeholder="Where do you work?" />
                 <div className="flex items-end">
-                  <div className="text-[9px] uppercase tracking-[0.25em] text-white/20 leading-relaxed">
+                  <div className="text-[11px] uppercase tracking-[0.25em] text-white/30 leading-relaxed">
                     Clients typically include Series&nbsp;A–C SaaS,
                     PE-backed portcos, and growth-stage DTC brands.
                   </div>
@@ -888,7 +888,7 @@ function ContactSection() {
               </div>
               <Field id="message" label="What are you working on?" placeholder="What's broken, what you need built, and when it needs to work." required textarea />
 
-              <div className="mt-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+              <div className="mt-8 md:mt-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                 <p className="text-[10px] uppercase tracking-widest text-white/20">
                   No pitch decks. No NDAs upfront.
                 </p>
@@ -915,7 +915,7 @@ function ContactSection() {
 
 function Footer({ onContact }: { onContact: () => void }) {
   return (
-    <footer id="contact" className="relative pt-32 pb-12 px-6 md:px-12 brutal-border border-x-0 border-b-0 mt-auto flex flex-col overflow-hidden">
+    <footer id="contact" className="relative pt-16 md:pt-32 pb-12 px-6 md:px-12 brutal-border border-x-0 border-b-0 mt-auto flex flex-col overflow-hidden">
       <SilkBackground />
       <div className="relative z-10 flex flex-col h-full">
       <div className="flex flex-col md:flex-row justify-between items-end mb-20 overflow-hidden">
@@ -927,12 +927,12 @@ function Footer({ onContact }: { onContact: () => void }) {
           className="flex flex-col text-left border-l-2 border-[#2563EB] pl-6"
         >
           <span className="accent-text text-[10px] tracking-widest uppercase mb-4 font-bold">Selective consulting & advisory engagements</span>
-          <h2 className="text-[15vw] md:text-[8vw] font-black font-display uppercase tracking-tighter leading-[0.8] mb-0">Let's<br />Build.</h2>
+          <h2 className="text-[12vw] md:text-[8vw] font-black font-display uppercase tracking-tighter leading-[0.8] mb-0">Let's<br />Build.</h2>
         </motion.div>
 
         <button
           onClick={onContact}
-          className="mt-12 md:mt-0 flex items-center gap-4 text-lg tracking-tighter uppercase font-bold hover:text-[#2563EB] transition-colors duration-200 cursor-pointer"
+          className="mt-8 md:mt-0 flex items-center gap-4 text-base md:text-lg tracking-tighter uppercase font-bold hover:text-[#2563EB] transition-colors duration-200 cursor-pointer py-3"
         >
           Send a Message <ArrowUpRight size={24} />
         </button>
@@ -943,9 +943,9 @@ function Footer({ onContact }: { onContact: () => void }) {
           <div className="flex flex-col">
             <span className="text-[8px] uppercase tracking-widest opacity-50 mb-1">Socials</span>
             <div className="flex gap-4">
-              <a href="https://linkedin.com/in/briancliette" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer" className="opacity-50 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200"><FaLinkedinIn size={18} /></a>
-              <a href="https://twitter.com/briancliette" aria-label="Twitter" target="_blank" rel="noopener noreferrer" className="opacity-50 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200"><FaXTwitter size={18} /></a>
-              <a href="https://instagram.com/briancliette" aria-label="Instagram" target="_blank" rel="noopener noreferrer" className="opacity-50 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200"><FaInstagram size={18} /></a>
+              <a href="https://linkedin.com/in/briancliette" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer" className="p-2 -m-2 opacity-50 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200"><FaLinkedinIn size={18} /></a>
+              <a href="https://twitter.com/briancliette" aria-label="Twitter" target="_blank" rel="noopener noreferrer" className="p-2 -m-2 opacity-50 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200"><FaXTwitter size={18} /></a>
+              <a href="https://instagram.com/briancliette" aria-label="Instagram" target="_blank" rel="noopener noreferrer" className="p-2 -m-2 opacity-50 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200"><FaInstagram size={18} /></a>
             </div>
           </div>
           <div className="h-8 w-px bg-white/10 hidden md:block" />
@@ -957,7 +957,7 @@ function Footer({ onContact }: { onContact: () => void }) {
           </div>
         </div>
         <div className="text-right flex flex-col items-end">
-          <div className="text-[40px] font-black font-display tracking-tighter leading-none">
+          <div className="text-[28px] md:text-[40px] font-black font-display tracking-tighter leading-none">
             BC<span className="accent-text">.</span>
           </div>
           <div className="text-[8px] uppercase tracking-[0.4em] opacity-40 mt-1">Agentic Engineering & AI GTM</div>

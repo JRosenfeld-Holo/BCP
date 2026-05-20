@@ -22,7 +22,7 @@ interface BentoGridProps {
 
 function BentoGrid({ items }: BentoGridProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
       {items.map((item, index) => (
         <div
           key={index}
@@ -35,7 +35,7 @@ function BentoGrid({ items }: BentoGridProps) {
               : "bg-slate-900/50 backdrop-blur-sm hover:bg-slate-800/60",
             "hover:shadow-[0_4px_24px_rgba(37,99,235,0.15)]",
             "hover:-translate-y-1 will-change-transform",
-            item.colSpan === 2 ? "md:col-span-2" : "col-span-1",
+            item.colSpan === 2 ? "sm:col-span-2 md:col-span-2" : "col-span-1",
             item.onClick ? "cursor-pointer" : "",
             item.hasPersistentHover && "-translate-y-1 shadow-[0_4px_24px_rgba(37,99,235,0.15)]"
           )}

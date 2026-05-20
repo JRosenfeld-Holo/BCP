@@ -43,7 +43,7 @@ export const MinimalistHero = ({
     <div
       ref={containerRef}
       className={cn(
-        'relative flex h-screen w-full flex-col items-center justify-between overflow-hidden bg-background p-8 font-sans md:p-12',
+        'relative flex h-screen w-full flex-col items-center justify-between overflow-hidden bg-background p-6 font-sans md:p-12',
         className
       )}
     >
@@ -62,7 +62,7 @@ export const MinimalistHero = ({
           style={{ x: leftX, opacity: textOpacityFade }}
           className="order-2 md:order-1 flex items-center justify-center text-center md:justify-start"
         >
-          <h1 className="text-7xl font-extrabold text-foreground md:text-8xl lg:text-9xl leading-none">
+          <h1 className="text-5xl font-extrabold text-foreground md:text-7xl lg:text-9xl leading-none">
             {overlayText.part1}
             <br />
             {overlayText.part2}
@@ -74,7 +74,7 @@ export const MinimalistHero = ({
           <motion.img
             src={imageSrc}
             alt={imageAlt}
-            className="relative z-10 h-auto w-[268px] object-cover md:w-[307px] scale-150 lg:w-[346px]"
+            className="relative z-10 h-auto w-[220px] object-cover md:w-[307px] md:scale-150 lg:w-[346px]"
             style={{
               maskImage: 'radial-gradient(ellipse 72% 85% at 52% 34%, white 48%, transparent 80%)',
               WebkitMaskImage: 'radial-gradient(ellipse 72% 85% at 52% 34%, white 48%, transparent 80%)',
@@ -94,7 +94,7 @@ export const MinimalistHero = ({
           style={{ x: rightX, opacity: textOpacityFade }}
           className="order-3 flex items-center justify-center text-center md:justify-start"
         >
-          <h2 className="text-7xl font-extrabold text-foreground leading-none">
+          <h2 className="text-5xl font-extrabold text-foreground md:text-7xl leading-none">
             {mainText.split('|').map((line, i) => (
               <React.Fragment key={i}>{line}<br /></React.Fragment>
             ))}
