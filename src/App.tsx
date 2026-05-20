@@ -935,7 +935,7 @@ function Footer({ onContact }: { onContact: () => void }) {
     <footer id="contact" className="relative pt-16 md:pt-32 pb-12 px-6 md:px-12 brutal-border border-x-0 border-b-0 mt-auto flex flex-col overflow-hidden">
       <SilkBackground />
       <div className="relative z-10 flex flex-col h-full">
-      <div className="flex flex-col md:flex-row justify-between items-end mb-20 overflow-hidden">
+      <div className="flex flex-col md:flex-row justify-between items-end mb-20">
         <motion.div
           initial={{ y: 200 }}
           whileInView={{ y: 0 }}
