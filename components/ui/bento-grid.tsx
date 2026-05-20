@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { cn } from "@/lib/utils";
 
 export interface BentoItem {
@@ -20,7 +21,7 @@ interface BentoGridProps {
   items: BentoItem[];
 }
 
-function BentoGrid({ items }: BentoGridProps) {
+const BentoGrid = React.memo(function BentoGrid({ items }: BentoGridProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
       {items.map((item, index) => (
@@ -130,6 +131,7 @@ function BentoGrid({ items }: BentoGridProps) {
       ))}
     </div>
   );
-}
+});
 
 export { BentoGrid };
+

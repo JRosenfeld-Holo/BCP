@@ -17,7 +17,7 @@ interface MinimalistHeroProps {
 }
 
 const SocialIcon = ({ href, icon: Icon }: { href: string; icon: React.ComponentType<{ className?: string; size?: number }> }) => (
-  <a href={href} target="_blank" rel="noopener noreferrer" className="text-foreground/60 transition-colors hover:text-foreground">
+  <a href={href} target="_blank" rel="noopener noreferrer" className="p-2 -m-2 text-foreground/60 transition-colors hover:text-foreground">
     <Icon className="h-5 w-5" />
   </a>
 );
@@ -43,7 +43,7 @@ export const MinimalistHero = ({
     <div
       ref={containerRef}
       className={cn(
-        'relative flex h-screen w-full flex-col items-center justify-between overflow-hidden bg-background p-6 font-sans md:p-12',
+        'relative flex h-screen w-full flex-col items-center justify-between overflow-hidden bg-background font-sans',
         className
       )}
     >
@@ -52,29 +52,76 @@ export const MinimalistHero = ({
         <UnicornStudioEmbed />
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 grid w-full max-w-7xl flex-grow grid-cols-1 items-center md:grid-cols-3">
+      {/* ── MOBILE layout (hidden on md+) ───────────────────────────── */}
+      <div className="md:hidden relative z-10 flex flex-col h-full w-full">
+        {/* Image — top half, full width */}
+        <div className="flex-1 flex items-end justify-center">
+          <motion.img
+            src={imageSrc}
+            alt={imageAlt}
+            className="h-auto w-[260px] object-cover"
+            style={{
+              maskImage: 'radial-gradient(ellipse 80% 90% at 52% 38%, white 50%, transparent 80%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 80% 90% at 52% 38%, white 50%, transparent 80%)',
+              opacity: imageOpacity,
+            }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          />
+        </div>
+
+        {/* Text block — bottom half */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="px-8 pb-6 flex flex-col gap-2"
+        >
+          <h1 className="text-6xl font-extrabold text-foreground leading-none">
+            {overlayText.part1}<br />{overlayText.part2}
+          </h1>
+          <h2 className="text-xl font-extrabold text-foreground/70 leading-snug">
+            {mainText.split('|').map((line, i) => (
+              <React.Fragment key={i}>{line}<br /></React.Fragment>
+            ))}
+          </h2>
+        </motion.div>
+
+        {/* Social footer */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 1 }}
+          className="px-8 pb-8 flex items-center gap-5"
+        >
+          {socialLinks.map((link, index) => (
+            <SocialIcon key={index} href={link.href} icon={link.icon} />
+          ))}
+        </motion.div>
+      </div>
+
+      {/* ── DESKTOP layout (hidden below md) ───────────────────────── */}
+      <div className="hidden md:grid relative z-10 w-full max-w-7xl flex-grow grid-cols-3 items-center p-12">
         {/* Left: large name */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1 }}
           style={{ x: leftX, opacity: textOpacityFade }}
-          className="order-2 md:order-1 flex items-center justify-center text-center md:justify-start"
+          className="flex items-center justify-start"
         >
-          <h1 className="text-5xl font-extrabold text-foreground md:text-7xl lg:text-9xl leading-none">
-            {overlayText.part1}
-            <br />
-            {overlayText.part2}
+          <h1 className="text-7xl font-extrabold text-foreground lg:text-9xl leading-none">
+            {overlayText.part1}<br />{overlayText.part2}
           </h1>
         </motion.div>
 
         {/* Center: image */}
-        <div className="relative order-1 md:order-2 flex justify-center items-center h-full">
+        <div className="flex justify-center items-center h-full">
           <motion.img
             src={imageSrc}
             alt={imageAlt}
-            className="relative z-10 h-auto w-[220px] object-cover md:w-[307px] md:scale-150 lg:w-[346px]"
+            className="relative z-10 h-auto w-[307px] object-cover md:scale-150 lg:w-[346px]"
             style={{
               maskImage: 'radial-gradient(ellipse 72% 85% at 52% 34%, white 48%, transparent 80%)',
               WebkitMaskImage: 'radial-gradient(ellipse 72% 85% at 52% 34%, white 48%, transparent 80%)',
@@ -92,9 +139,9 @@ export const MinimalistHero = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.2 }}
           style={{ x: rightX, opacity: textOpacityFade }}
-          className="order-3 flex items-center justify-center text-center md:justify-start"
+          className="flex items-center justify-start"
         >
-          <h2 className="text-5xl font-extrabold text-foreground md:text-7xl leading-none">
+          <h2 className="text-5xl font-extrabold text-foreground lg:text-6xl leading-tight">
             {mainText.split('|').map((line, i) => (
               <React.Fragment key={i}>{line}<br /></React.Fragment>
             ))}
@@ -102,8 +149,8 @@ export const MinimalistHero = ({
         </motion.div>
       </div>
 
-      {/* Footer */}
-      <footer className="z-30 flex w-full max-w-7xl items-center justify-between">
+      {/* Desktop footer */}
+      <footer className="hidden md:flex z-30 w-full max-w-7xl items-center justify-between px-12 pb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

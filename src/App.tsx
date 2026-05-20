@@ -1,8 +1,7 @@
 import React, { useRef, useEffect, useState, Suspense, lazy } from 'react';
 import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
-import { ServicePage } from './pages/ServicePage';
-
 const FunnelSection = lazy(() => import('./FunnelSection').then(m => ({ default: m.FunnelSection })));
+const ServicePage = lazy(() => import('./pages/ServicePage').then(m => ({ default: m.ServicePage })));
 import { motion, useScroll, AnimatePresence } from 'motion/react';
 import { ArrowUpRight, Bot, Zap, Network, LineChart, Star, X } from 'lucide-react';
 import { FaLinkedinIn, FaXTwitter, FaInstagram } from 'react-icons/fa6';
@@ -272,7 +271,7 @@ function Navbar({ onContact }: { onContact: () => void }) {
 function HeroSection() {
   return (
     <MinimalistHero
-      mainText="agents sell.|systems scale."
+      mainText="build agents.|print pipeline."
       imageSrc={brianHeroMinimalist}
       imageAlt="Brian Cliette — Agentic Engineering & AI GTM Consultant"
       overlayText={{ part1: 'brian', part2: 'cliette' }}
@@ -298,11 +297,7 @@ function ScrollingMarquee() {
 
   return (
     <div className="py-10 border-y border-white/5 overflow-hidden">
-      <motion.div
-        animate={{ x: ['0%', '-50%'] }}
-        transition={{ repeat: Infinity, ease: 'linear', duration: 28 }}
-        className="flex items-center whitespace-nowrap w-max"
-      >
+      <div className="animate-marquee flex items-center whitespace-nowrap w-max">
         {[...items, ...items].map((label, i) => (
           <React.Fragment key={i}>
             <span className={`text-7xl font-black font-display uppercase tracking-tighter px-10 leading-none ${i % 2 === 0 ? 'text-white/10' : 'text-outline'}`}>
@@ -311,7 +306,7 @@ function ScrollingMarquee() {
             <span className="text-[#2563EB] px-4 shrink-0 flex items-center"><Star size={10} fill="currentColor" /></span>
           </React.Fragment>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -353,13 +348,35 @@ function AboutFrameCanvas() {
     syncSize();
 
     const preload = () => {
-      const images: HTMLImageElement[] = Array.from({ length: ABOUT_FRAME_COUNT }, (_, i) => {
+      const images: HTMLImageElement[] = new Array(ABOUT_FRAME_COUNT);
+      framesRef.current = images;
+
+      const loadFrame = (i: number) => {
         const img = new Image();
         img.src = `/about-frames/frame_${String(i + 1).padStart(3, '0')}.webp`;
-        img.onload = () => { if (i === ABOUT_FRAME_COUNT - 1) { frameIndexRef.current = ABOUT_FRAME_COUNT - 1; draw(ABOUT_FRAME_COUNT - 1); } };
-        return img;
-      });
-      framesRef.current = images;
+        img.onload = () => {
+          if (i === ABOUT_FRAME_COUNT - 1) {
+            frameIndexRef.current = ABOUT_FRAME_COUNT - 1;
+            draw(ABOUT_FRAME_COUNT - 1);
+          }
+        };
+        images[i] = img;
+      };
+
+      // Load the initial display frame immediately
+      loadFrame(ABOUT_FRAME_COUNT - 1);
+
+      // Load remaining frames in batches of 10 to avoid network stall
+      const BATCH = 10;
+      const loadBatch = (start: number) => {
+        for (let i = start; i < Math.min(start + BATCH, ABOUT_FRAME_COUNT - 1); i++) {
+          loadFrame(i);
+        }
+        if (start + BATCH < ABOUT_FRAME_COUNT - 1) {
+          setTimeout(() => loadBatch(start + BATCH), 80);
+        }
+      };
+      setTimeout(() => loadBatch(0), 0);
     };
 
     const st = ScrollTrigger.create({
