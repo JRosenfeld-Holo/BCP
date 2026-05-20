@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import UnicornStudioEmbed from '@/unicornstudio-project-embed-container';
 
@@ -32,9 +32,6 @@ export const MinimalistHero = ({
   className,
 }: MinimalistHeroProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll();
-
-  const imageOpacity = useTransform(scrollY, [0, 350], [1, 0]);
 
   return (
     <div
@@ -60,7 +57,6 @@ export const MinimalistHero = ({
             style={{
               maskImage: 'radial-gradient(ellipse 80% 90% at 52% 38%, white 50%, transparent 80%)',
               WebkitMaskImage: 'radial-gradient(ellipse 80% 90% at 52% 38%, white 50%, transparent 80%)',
-              opacity: imageOpacity,
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -121,7 +117,6 @@ export const MinimalistHero = ({
             style={{
               maskImage: 'radial-gradient(ellipse 72% 85% at 52% 34%, white 48%, transparent 80%)',
               WebkitMaskImage: 'radial-gradient(ellipse 72% 85% at 52% 34%, white 48%, transparent 80%)',
-              opacity: imageOpacity,
             }}
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
