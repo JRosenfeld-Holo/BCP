@@ -90,7 +90,7 @@ export const MinimalistHero = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 1 }}
-          className="px-8 pb-8 flex items-center gap-5"
+          className="px-8 pb-8 flex items-center gap-8"
         >
           {socialLinks.map((link, index) => (
             <SocialIcon key={index} href={link.href} icon={link.icon} />
@@ -138,7 +138,7 @@ export const MinimalistHero = ({
         >
           <h2 className="text-5xl font-extrabold text-foreground lg:text-6xl leading-tight">
             {mainText.split('|').map((line, i) => (
-              <React.Fragment key={i}>{line}<br /></React.Fragment>
+              <span key={i} className="block whitespace-nowrap">{line}</span>
             ))}
           </h2>
         </motion.div>
@@ -150,7 +150,7 @@ export const MinimalistHero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 1.2 }}
-          className="flex items-center space-x-4"
+          className="flex items-center space-x-8"
         >
           {socialLinks.map((link, index) => (
             <SocialIcon key={index} href={link.href} icon={link.icon} />
