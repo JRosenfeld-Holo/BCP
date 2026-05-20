@@ -4,9 +4,13 @@
 @theme {
   --color-slate-900: #0f172a;
   --color-navy-900: #080808;
-  --color-cyan-accent: #87FFFB;
-  --color-pink-accent: #FF87D4;
-  --color-gold-accent: #FFE742;
+  --color-background: #080808;
+  --color-foreground: #f8fafc;
+
+  /* Brand palette: black · royal blue · white · grey */
+  --color-brand-blue: #2563EB;
+  --color-brand-grey: #9CA3AF;
+  --color-cyan-accent: #2563EB; /* alias kept for Tailwind utility classes */
 
   --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
@@ -25,17 +29,16 @@ body {
 }
 
 ::selection {
-  background: var(--color-cyan-accent);
-  color: var(--color-navy-900);
+  background: var(--color-brand-blue);
+  color: #ffffff;
 }
 
-/* Focus styles for keyboard navigation */
 :focus-visible {
-  outline: 2px solid var(--color-cyan-accent);
+  outline: 2px solid var(--color-brand-blue);
   outline-offset: 3px;
 }
 
-/* Custom Brutalist Scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -43,17 +46,22 @@ body {
   background: var(--color-navy-900);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-cyan-accent);
+  background: var(--color-brand-blue);
 }
 
-/* Animated gradient text — funnel section accent */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Animated gradient text */
 @keyframes gradient-flow {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
 
 .text-gradient-animate {
-  background: linear-gradient(90deg, #87FFFB, #FF87D4, #FFE742, #87FFFB, #FF87D4, #87FFFB);
+  background: linear-gradient(90deg, #2563EB, #9CA3AF, #ffffff, #2563EB, #9CA3AF, #2563EB);
   background-size: 400% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -61,33 +69,23 @@ body {
   animation: gradient-flow 8s ease-in-out infinite;
 }
 
-/* Glassmorphism utility */
 .glass-panel {
   background: rgba(15, 23, 42, 0.4);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(135, 255, 251, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.15);
 }
 
 .accent-text {
-  color: var(--color-cyan-accent);
+  color: var(--color-brand-blue);
 }
 
 .brutal-border {
-  border: 1px solid rgba(135, 255, 251, 0.25);
+  border: 1px solid rgba(37, 99, 235, 0.25);
 }
 
 .text-outline {
   -webkit-text-stroke: 1px rgba(248, 250, 252, 0.25);
   color: transparent;
-}
-
-/* ── Hero parallax section ───────────────────────────────────────────── */
-.hero-wrap {
-  background: white;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  height: 100vh;
 }
 
 .sr-only {
@@ -100,90 +98,6 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-.hero-name {
-  font-family: "Archivo", sans-serif;
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 0.85;
-  letter-spacing: -0.04em;
-  color: #171321;
-  mix-blend-mode: hard-light;
-  position: absolute;
-  left: 0;
-  right: 0;
-  text-align: center;
-  z-index: 90;
-  pointer-events: none;
-}
-
-.hero-name-top {
-  font-size: 22vw;
-  top: 3vh;
-}
-
-.hero-name-bottom {
-  font-size: 16vw;
-  bottom: 3vh;
-}
-
-.hero-cutout {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  transform: scale(0.9);
-  transform-origin: bottom center;
-  z-index: 100;
-}
-
-.hero-main,
-.hero-stripes,
-.hero-left-tri,
-.hero-right-tri {
-  background-image: var(--img-bg);
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  position: absolute;
-  z-index: 10;
-  transform: scale(0.9);
-  transform-origin: bottom center;
-}
-
-.hero-main {
-  clip-path: url(#dots);
-  filter: url(#grey);
-  z-index: 5;
-}
-
-.hero-stripes {
-  clip-path: url(#stripes);
-  filter: url(#pink);
-  z-index: 2;
-}
-
-.hero-left-tri {
-  clip-path: url(#leftTriangle);
-  filter: url(#pink);
-}
-
-.hero-right-tri {
-  clip-path: url(#rightTriangle);
-  filter: url(#blue);
-  z-index: 1;
-}
-
-.hero-svg-defs clipPath {
-  transform: scale(calc(1 / 1440), calc(1 / 960));
 }
 
 /* ── Reduced motion ──────────────────────────────────────────────────── */
