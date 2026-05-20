@@ -437,10 +437,10 @@ function AboutSection() {
 
           <div className="space-y-4 pl-6 border-l border-white/10 mb-10">
             <p className="text-sm opacity-70 leading-relaxed">
-              Most AI strategy ends at the deck. Mine ends at the dashboard. I design and deploy the agent infrastructure — prospecting systems, signal workflows, RevOps automation — that turns intent into closed revenue. Not someday. This quarter.
+              Most AI strategy ends at the deck. Mine ends at the dashboard. I design and deploy agent infrastructure: prospecting systems, signal workflows, RevOps automation that turns intent into closed revenue. Not someday. This quarter.
             </p>
             <p className="text-sm opacity-70 leading-relaxed">
-              I've been building on the internet since Friendster. Investment banker, university professor, growth operator — I've run every motion. In the last decade: Twilio's $60M global paid program, AG1's climb to $2B, Pixlee (a16z-backed), and U-Lace (Shark Tank / Mark Cuban).
+              I've been building on the internet since Friendster. Investment banker, university professor, growth operator; I've run every motion. In the last decade: Twilio's $60M global paid program, AG1's climb to $2B, Pixlee (a16z-backed), and U-Lace (Shark Tank / Mark Cuban).
             </p>
           </div>
 
@@ -513,7 +513,7 @@ function ServicesSection() {
         {
           title: "Agentic Engineering",
           meta: "01. Intelligence",
-          description: "Purpose-built agent networks that prospect, qualify, and run outreach end-to-end. Not a SaaS tool — an autonomous team. Clients average 240% ROI within 12 months.",
+          description: "Purpose-built agent networks that handle outreach from first signal to booked meeting, with no SaaS seat and no babysitting required. Clients average 240% ROI within 12 months.",
           icon: <Bot className="w-5 h-5 text-[#2563EB]" />,
           status: "Flagship",
           tags: ["Agents", "Outreach", "Pipeline"],
@@ -525,7 +525,7 @@ function ServicesSection() {
         {
           title: "AI Automation",
           meta: "03. Automation",
-          description: "The 6-hour tasks eating your reps' weeks — research, enrichment, CRM hygiene, lead scoring — handled by agents that don't clock out.",
+          description: "Research, enrichment, CRM hygiene, lead scoring: the work eating 6 hours of your reps' day runs 24/7 on agents instead.",
           icon: <Zap className="w-5 h-5 text-white" />,
           status: "Always on",
           tags: ["Workflows", "CRM", "Enrichment"],
@@ -547,7 +547,7 @@ function ServicesSection() {
         {
           title: "Revenue Intelligence",
           meta: "04. Revenue",
-          description: "Real-time signal monitoring and AI scoring that surfaces your best opportunities before your competitors even see them.",
+          description: "Signal monitoring and AI scoring that identifies which accounts are in-market this week, before your competitors book the first call.",
           icon: <LineChart className="w-5 h-5 text-[#2563EB]" />,
           status: "Live",
           tags: ["Signals", "Scoring", "AI"],
