@@ -271,10 +271,10 @@ function Navbar({ onContact }: { onContact: () => void }) {
 function HeroSection() {
   return (
     <MinimalistHero
-      mainText="build agents.|print pipeline."
+      mainText="Build Agents.|Print Pipeline."
       imageSrc={brianHeroMinimalist}
       imageAlt="Brian Cliette — Agentic Engineering & AI GTM Consultant"
-      overlayText={{ part1: 'brian', part2: 'cliette' }}
+      overlayText={{ part1: 'Brian', part2: 'Cliette' }}
       socialLinks={[
         { icon: FaLinkedinIn, href: 'https://linkedin.com/in/briancliette' },
         { icon: FaXTwitter, href: 'https://twitter.com/briancliette' },
