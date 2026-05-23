@@ -372,11 +372,11 @@ function AboutSection() {
   ];
 
   const press = [
-    { name: 'Entrepreneur', src: '/press/Entrepreneur-logo.webp' },
-    { name: 'Forbes',       src: '/press/forbes-logo-black-transparent.webp' },
-    { name: 'Inc.',         src: '/press/Inc._(business_magazine)_logo.svg.webp' },
+    { name: 'Entrepreneur', src: '/press/entrepreneur.svg' },
+    { name: 'Forbes',       src: '/press/forbes.svg' },
+    { name: 'Inc.',         src: '/press/inc.svg' },
     { name: 'HuffPost',     src: '/press/huffpost.svg' },
-    { name: 'Penn State',   src: '/press/penn state news.webp' },
+    { name: 'Penn State',   src: '/press/pennstate.svg' },
   ];
 
   return (
@@ -431,7 +431,7 @@ function AboutSection() {
                   key={pub.name}
                   src={pub.src}
                   alt={pub.name}
-                  className="h-5 w-auto object-contain opacity-25 hover:opacity-60 transition-opacity duration-200"
+                  className="h-4 max-w-[90px] object-contain opacity-25 hover:opacity-60 transition-opacity duration-200"
                   style={{ filter: 'brightness(0) invert(1)' }}
                 />
               ))}
