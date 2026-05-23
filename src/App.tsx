@@ -216,24 +216,11 @@ function ScrollProgress() {
 }
 
 function Navbar({ onContact }: { onContact: () => void }) {
-  const [expanded, setExpanded] = useState(false);
-  const { scrollY } = useScroll();
-
-  useEffect(() => {
-    // Show nav only after scrolling past the hero + marquee strip (~100vh)
-    return scrollY.on('change', (y) => {
-      setExpanded(prev => {
-        const next = y > window.innerHeight;
-        return next !== prev ? next : prev;
-      });
-    });
-  }, [scrollY]);
-
   return (
     <motion.div
       initial={{ y: -60, opacity: 0 }}
-      animate={{ y: expanded ? 0 : -80, opacity: expanded ? 1 : 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-5 inset-x-0 z-[200] flex justify-center pointer-events-none"
     >
       <nav
@@ -244,24 +231,13 @@ function Navbar({ onContact }: { onContact: () => void }) {
           <span className="font-black font-display tracking-tighter uppercase text-[15px] leading-none shrink-0">
             Brian Cliette
           </span>
-
-          <motion.div
-            animate={{
-              width: expanded ? 'auto' : 0,
-              opacity: expanded ? 1 : 0,
-            }}
-            transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="overflow-hidden flex items-center whitespace-nowrap"
-            style={{ minWidth: 0 }}
-          >
-            <div className="w-px h-4 bg-white/20 mx-5 shrink-0" />
-            <div className="flex gap-5 md:gap-7 items-center text-[13px] md:text-[15px] uppercase tracking-tighter font-black font-display">
-              <a href="#about" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">About</a>
-              <a href="#services" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">Services</a>
-              <a href="#work" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">Work</a>
-              <button onClick={onContact} className="bg-[#2563EB] text-white rounded-full px-4 py-2 hover:opacity-80 transition-opacity duration-200 cursor-pointer">Let's Talk</button>
-            </div>
-          </motion.div>
+          <div className="w-px h-4 bg-white/20 mx-5 shrink-0" />
+          <div className="flex gap-5 md:gap-7 items-center text-[13px] md:text-[15px] uppercase tracking-tighter font-black font-display">
+            <a href="#about" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">About</a>
+            <a href="#services" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">Services</a>
+            <a href="#work" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">Work</a>
+            <button onClick={onContact} className="bg-[#2563EB] text-white rounded-full px-4 py-2 hover:opacity-80 transition-opacity duration-200 cursor-pointer">Let's Talk</button>
+          </div>
         </div>
       </nav>
     </motion.div>
@@ -569,11 +545,12 @@ function LogoMarquee() {
       <p className="text-[8px] uppercase tracking-[0.4em] opacity-30 text-center mb-8">Brands & Teams I've Worked With</p>
       <div className="animate-marquee-logos flex items-center whitespace-nowrap w-max">
         {[...logos, ...logos].map((logo, i) => (
-          <div key={i} className="mx-10 shrink-0 flex items-center">
+          <div key={i} className="mx-10 shrink-0 w-[110px] h-[36px] flex items-center justify-center">
             <img
               src={`/logos/${encodeURIComponent(logo)}`}
               alt=""
-              className="h-7 w-auto max-w-[120px] object-contain grayscale opacity-30 hover:opacity-70 hover:grayscale-0 transition-all duration-300"
+              className="max-w-full max-h-full object-contain opacity-30 hover:opacity-70 transition-opacity duration-300"
+              style={{ filter: 'brightness(0) invert(1)' }}
             />
           </div>
         ))}
