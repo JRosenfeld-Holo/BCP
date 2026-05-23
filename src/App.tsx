@@ -392,12 +392,15 @@ function AboutSection() {
             </h3>
           </div>
 
-          <div className="space-y-4 pl-6 border-l border-white/10 mb-10">
+          <div className="space-y-5 pl-6 border-l border-white/10 mb-10">
             <p className="text-sm opacity-70 leading-relaxed">
               Most AI strategy ends at the deck. Mine ends at the dashboard. I design and deploy agent infrastructure: prospecting systems, signal workflows, RevOps automation that turns intent into closed revenue. Not someday. This quarter.
             </p>
             <p className="text-sm opacity-70 leading-relaxed">
-              I've been building on the internet since Friendster. Investment banker, university professor, growth operator; I've run every motion. In the last decade: Twilio's $60M global paid program, AG1's climb to $2B, Pixlee (a16z-backed), and U-Lace (Shark Tank / Mark Cuban).
+              I've been building on the internet since Friendster. The path since then has been deliberate: investment banking, a decade teaching at Penn State, then growth operations. That combination closes a gap that trips up most consultants. Strategy doesn't get lost between the executive and the engineer when the same person can speak to both.
+            </p>
+            <p className="text-sm opacity-70 leading-relaxed">
+              The proof is in the last ten years: Twilio's $60M global paid program, AG1's climb to a $2B brand, Pixlee from early traction to category leader (a16z-backed), and U-Lace with Mark Cuban on Shark Tank. Every engagement had a different market and a different growth lever, but the same mandate: build a system that generates revenue after I'm gone.
             </p>
           </div>
 
