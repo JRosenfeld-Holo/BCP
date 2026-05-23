@@ -371,7 +371,13 @@ function AboutSection() {
     { value: '5M+', label: 'Book Downloads' },
   ];
 
-  const press = ['Entrepreneur', 'Forbes', 'Inc.', 'Huffington Post', 'Penn State News'];
+  const press = [
+    { name: 'Entrepreneur', src: '/press/Entrepreneur-logo.webp' },
+    { name: 'Forbes',       src: '/press/forbes-logo-black-transparent.webp' },
+    { name: 'Inc.',         src: '/press/Inc._(business_magazine)_logo.svg.webp' },
+    { name: 'HuffPost',     src: '/press/huffpost.svg' },
+    { name: 'Penn State',   src: '/press/penn state news.webp' },
+  ];
 
   return (
     <section id="about" className="border-t border-white/5 overflow-hidden">
@@ -419,9 +425,15 @@ function AboutSection() {
           {/* Press */}
           <div className="pl-6">
             <p className="text-[8px] uppercase tracking-[0.4em] opacity-40 mb-3">As Featured In</p>
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
               {press.map(pub => (
-                <span key={pub} className="text-xs font-bold uppercase tracking-widest opacity-25 hover:opacity-60 transition-opacity duration-200 cursor-default">{pub}</span>
+                <img
+                  key={pub.name}
+                  src={pub.src}
+                  alt={pub.name}
+                  className="h-5 w-auto object-contain opacity-25 hover:opacity-60 transition-opacity duration-200"
+                  style={{ filter: 'brightness(0) invert(1)' }}
+                />
               ))}
             </div>
           </div>
