@@ -545,7 +545,7 @@ function LogoMarquee() {
       <p className="text-[8px] uppercase tracking-[0.4em] opacity-30 text-center mb-8">Brands & Teams I've Worked With</p>
       <div className="animate-marquee-logos flex items-center whitespace-nowrap w-max">
         {[...logos, ...logos].map((logo, i) => (
-          <div key={i} className="mx-10 shrink-0 w-[110px] h-[36px] flex items-center justify-center">
+          <div key={i} className="mx-10 shrink-0 w-[160px] h-[56px] flex items-center justify-center">
             <img
               src={`/logos/${encodeURIComponent(logo)}`}
               alt=""
