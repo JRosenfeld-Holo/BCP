@@ -528,7 +528,6 @@ function LogoMarquee() {
     'twilio logo.webp',
     'evidation logo.webp',
     'pixlee logo.webp',
-    'ulace logo.webp',
     'Penn-State-University-Logo.webp',
     'Planoly_Logo.webp',
     'begin health logo.webp',
@@ -540,26 +539,25 @@ function LogoMarquee() {
     'NutrotonicLogo.webp',
     'Drknotlogo.webp',
     'five star jewelers.webp',
-    'logotype_cohen-financial.webp',
     'cc-stacked-logo.webp',
     'flysupply logo.webp',
     'weco logo.webp',
     'BrandBossHQ-Logo-Dark.webp',
-    'Cliette Ai.webp',
     'Waliy Ai.webp',
     'startearly-logo-new-purple.svg',
   ];
 
   return (
-    <div className="bg-white py-10 overflow-hidden">
-      <p className="text-[8px] uppercase tracking-[0.4em] text-black/30 text-center mb-8">Brands & Teams I've Worked With</p>
+    <div className="py-10 border-y border-white/5 overflow-hidden">
+      <p className="text-[8px] uppercase tracking-[0.4em] opacity-30 text-center mb-8">Brands & Teams I've Worked With</p>
       <div className="animate-marquee-logos flex items-center whitespace-nowrap w-max">
         {[...logos, ...logos].map((logo, i) => (
           <div key={i} className="mx-10 shrink-0 w-[140px] h-[50px] flex items-center justify-center">
             <img
               src={`/logos/${encodeURIComponent(logo)}`}
               alt=""
-              className="max-w-full max-h-full object-contain grayscale opacity-50 hover:opacity-80 transition-opacity duration-300"
+              className="max-w-full max-h-full object-contain opacity-30 hover:opacity-70 transition-opacity duration-300"
+              style={{ filter: 'brightness(0) invert(1)' }}
             />
           </div>
         ))}
