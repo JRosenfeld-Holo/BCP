@@ -53,7 +53,7 @@ export const MinimalistHero = ({
           <motion.img
             src={imageSrc}
             alt={imageAlt}
-            className="h-auto w-[260px] object-cover"
+            className="h-auto w-[312px] object-cover"
             style={{
               marginTop: '50px',
               maskImage: 'radial-gradient(ellipse 80% 90% at 52% 38%, white 50%, transparent 80%)',
@@ -114,7 +114,7 @@ export const MinimalistHero = ({
           <motion.img
             src={imageSrc}
             alt={imageAlt}
-            className="relative z-10 h-auto w-[307px] object-cover md:scale-150 lg:w-[346px]"
+            className="relative z-10 h-auto w-[368px] object-cover md:scale-150 lg:w-[415px]"
             style={{
               marginTop: '50px',
               maskImage: 'radial-gradient(ellipse 72% 85% at 52% 34%, white 48%, transparent 80%)',

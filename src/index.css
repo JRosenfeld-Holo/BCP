@@ -64,6 +64,11 @@ body {
   will-change: transform;
 }
 
+.animate-marquee-logos {
+  animation: marquee 50s linear infinite;
+  will-change: transform;
+}
+
 /* Animated gradient text */
 @keyframes gradient-flow {
   0%, 100% { background-position: 0% 50%; }

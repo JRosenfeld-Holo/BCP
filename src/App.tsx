@@ -3,12 +3,12 @@ import { Routes, Route, useNavigate, useParams, useLocation } from 'react-router
 const FunnelSection = lazy(() => import('./FunnelSection').then(m => ({ default: m.FunnelSection })));
 const ServicePage = lazy(() => import('./pages/ServicePage').then(m => ({ default: m.ServicePage })));
 import { motion, useScroll, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, Bot, Zap, Network, LineChart, Star, X } from 'lucide-react';
+import { ArrowUpRight, Bot, Zap, Network, LineChart, X } from 'lucide-react';
 import { FaLinkedinIn, FaXTwitter, FaInstagram } from 'react-icons/fa6';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
-import brianHeroMinimalist from '../brian_hero_minimalist.webp';
+import brianHeroMinimalist from '../brian_hero_final.webp';
 import { MinimalistHero } from '@/components/ui/minimalist-hero';
 import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
 import athleticGreensImg from '../athletic greens .webp';
@@ -168,7 +168,7 @@ function HomePage() {
       <ScrollProgress />
       <Navbar onContact={openContact} />
       <HeroSection />
-      <ScrollingMarquee />
+      <LogoMarquee />
       <AboutSection />
       <ServicesSection />
       <FeaturedWorkSection />
@@ -285,31 +285,6 @@ function HeroSection() {
   );
 }
 
-function ScrollingMarquee() {
-  const items = [
-    'Agentic Engineering',
-    'AI-First GTM Strategy',
-    'Revenue Intelligence',
-    'AI Automation',
-    'Multi-Agent Systems',
-    'Signal-Based Prospecting',
-  ];
-
-  return (
-    <div className="py-10 border-y border-white/5 overflow-hidden">
-      <div className="animate-marquee flex items-center whitespace-nowrap w-max">
-        {[...items, ...items].map((label, i) => (
-          <React.Fragment key={i}>
-            <span className={`text-7xl font-black font-display uppercase tracking-tighter px-10 leading-none ${i % 2 === 0 ? 'text-white/10' : 'text-outline'}`}>
-              {label}
-            </span>
-            <span className="text-[#2563EB] px-4 shrink-0 flex items-center"><Star size={10} fill="currentColor" /></span>
-          </React.Fragment>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 const ABOUT_FRAME_COUNT = 80;
 
@@ -556,6 +531,54 @@ function ServicesSection() {
         },
       ] as BentoItem[]} />
     </section>
+  );
+}
+
+function LogoMarquee() {
+  const logos = [
+    'ag1logo.webp',
+    'twilio logo.webp',
+    'evidation logo.webp',
+    'pixlee logo.webp',
+    'ulace logo.webp',
+    'Penn-State-University-Logo.webp',
+    'Planoly_Logo.webp',
+    'begin health logo.webp',
+    'marketerhire logo.webp',
+    'gem logo.webp',
+    'snipfeedlogo.webp',
+    'growth machine logo.webp',
+    'Tribe Metrics.webp',
+    'NutrotonicLogo.webp',
+    'Drknotlogo.webp',
+    'five star jewelers.webp',
+    'freida rothman logo.webp',
+    'keratincure logo.webp',
+    'logotype_cohen-financial.webp',
+    'cc-stacked-logo.webp',
+    'flysupply logo.webp',
+    'weco logo.webp',
+    'BrandBossHQ-Logo-Dark.webp',
+    'Cliette Ai.webp',
+    'Waliy Ai.webp',
+    'startearly-logo-new-purple.svg',
+  ];
+
+  return (
+    <div className="py-12 border-b border-white/5 overflow-hidden">
+      <p className="text-[8px] uppercase tracking-[0.4em] opacity-30 text-center mb-8">Brands & Teams I've Worked With</p>
+      <div className="animate-marquee-logos flex items-center whitespace-nowrap w-max">
+        {[...logos, ...logos].map((logo, i) => (
+          <div key={i} className="mx-10 shrink-0 flex items-center">
+            <img
+              src={`/logos/${encodeURIComponent(logo)}`}
+              alt=""
+              className="h-7 w-auto max-w-[120px] object-contain grayscale opacity-30 hover:opacity-70 hover:grayscale-0 transition-all duration-300"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
