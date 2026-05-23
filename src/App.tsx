@@ -531,7 +531,7 @@ function LogoMarquee() {
     'begin health logo.webp',
     'marketerhire logo.webp',
     'gem logo.webp',
-    'snipfeedlogo.webp',
+
     'growth machine logo.webp',
     'Tribe Metrics.webp',
     'NutrotonicLogo.webp',
