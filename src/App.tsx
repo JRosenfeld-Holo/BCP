@@ -551,16 +551,15 @@ function LogoMarquee() {
   ];
 
   return (
-    <div className="py-12 border-b border-white/5 overflow-hidden">
-      <p className="text-[8px] uppercase tracking-[0.4em] opacity-30 text-center mb-8">Brands & Teams I've Worked With</p>
+    <div className="bg-white py-10 overflow-hidden">
+      <p className="text-[8px] uppercase tracking-[0.4em] text-black/30 text-center mb-8">Brands & Teams I've Worked With</p>
       <div className="animate-marquee-logos flex items-center whitespace-nowrap w-max">
         {[...logos, ...logos].map((logo, i) => (
-          <div key={i} className="mx-10 shrink-0 w-[160px] h-[56px] flex items-center justify-center">
+          <div key={i} className="mx-10 shrink-0 w-[140px] h-[50px] flex items-center justify-center">
             <img
               src={`/logos/${encodeURIComponent(logo)}`}
               alt=""
-              className="max-w-full max-h-full object-contain opacity-30 hover:opacity-70 transition-opacity duration-300"
-              style={{ filter: 'brightness(0) invert(1)' }}
+              className="max-w-full max-h-full object-contain grayscale opacity-50 hover:opacity-80 transition-opacity duration-300"
             />
           </div>
         ))}
