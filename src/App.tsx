@@ -540,8 +540,6 @@ function LogoMarquee() {
     'NutrotonicLogo.webp',
     'Drknotlogo.webp',
     'five star jewelers.webp',
-    'freida rothman logo.webp',
-    'keratincure logo.webp',
     'logotype_cohen-financial.webp',
     'cc-stacked-logo.webp',
     'flysupply logo.webp',
