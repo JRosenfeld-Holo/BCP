@@ -11,6 +11,7 @@ import * as THREE from 'three';
 import brianHeroMinimalist from '../brian_hero_final.webp';
 import { MinimalistHero } from '@/components/ui/minimalist-hero';
 import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
+import { BragWall, TestimonialCarousel } from './BragSection';
 import athleticGreensImg from '../athletic greens .webp';
 import twilioImg from '../twilio_fin.webp';
 import evidationImg from '../evidation_health.webp';
@@ -170,6 +171,8 @@ function HomePage() {
       <HeroSection />
       <LogoMarquee />
       <AboutSection />
+      <BragWall />
+      <TestimonialCarousel />
       <ServicesSection />
       <FeaturedWorkSection />
       <Suspense fallback={<div className="h-screen border-t border-white/5" />}>
@@ -236,7 +239,8 @@ function Navbar({ onContact }: { onContact: () => void }) {
             <a href="#about" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">About</a>
             <a href="#services" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">Services</a>
             <a href="#work" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">Work</a>
-            <button onClick={onContact} className="bg-[#2563EB] text-white rounded-full px-4 py-2 hover:opacity-80 transition-opacity duration-200 cursor-pointer">Let's Talk</button>
+            <button onClick={onContact} className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200 cursor-pointer">Message</button>
+            <a href="#contact-form" className="bg-[#2563EB] text-white rounded-full px-4 py-2 hover:opacity-80 transition-opacity duration-200 cursor-pointer">Book a Call</a>
           </div>
         </div>
       </nav>
@@ -379,6 +383,14 @@ function AboutSection() {
     { name: 'Penn State',   src: '/press/pennstate.svg' },
   ];
 
+  // The four marks Brian called out by name.
+  const clients = [
+    { name: 'Twilio', file: 'twilio logo.webp' },
+    { name: 'AG1',    file: 'ag1logo.webp' },
+    { name: 'Pixlee', file: 'pixlee logo.webp' },
+    { name: 'a16z',   file: 'a16z logo.webp' },
+  ];
+
   return (
     <section id="about" className="border-t border-white/5 overflow-hidden">
       <div className="flex flex-col md:flex-row min-h-[700px]">
@@ -404,37 +416,55 @@ function AboutSection() {
             </p>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 gap-3 mb-10">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="brutal-border p-5 bg-slate-900/50 backdrop-blur-sm rounded-sm"
-              >
-                <div className="text-2xl md:text-3xl font-black font-display tracking-tighter accent-text leading-none mb-1">
-                  {stat.value}
-                </div>
-                <div className="text-[11px] uppercase tracking-[0.2em] opacity-50">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
+          {/* Stats and press share the row 50/50 so the features carry the same
+              weight as the numbers rather than trailing them as a footnote. */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 mb-12">
+            <div className="grid grid-cols-2 gap-3">
+              {stats.map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-60px' }}
+                  transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                  className="brutal-border p-4 bg-slate-900/50 backdrop-blur-sm rounded-sm"
+                >
+                  <div className="text-xl md:text-2xl font-black font-display tracking-tighter accent-text leading-none mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-[10px] uppercase tracking-[0.18em] opacity-50 leading-snug">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="flex flex-col justify-center">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-white mb-6">As Featured In</p>
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-6">
+                {press.map(pub => (
+                  <img
+                    key={pub.name}
+                    src={pub.src}
+                    alt={pub.name}
+                    className="h-6 md:h-7 max-w-[120px] object-contain"
+                    style={{ filter: 'brightness(0) invert(1)' }}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* Press */}
-          <div className="pl-6">
-            <p className="text-[8px] uppercase tracking-[0.4em] opacity-40 mb-3">As Featured In</p>
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-              {press.map(pub => (
+          {/* Named brand marks, placed where Brian asked for them */}
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.3em] text-white mb-6">Clients I've Worked With</p>
+            <div className="flex flex-wrap items-center gap-x-10 gap-y-6">
+              {clients.map(client => (
                 <img
-                  key={pub.name}
-                  src={pub.src}
-                  alt={pub.name}
-                  className="h-4 max-w-[90px] object-contain opacity-25 hover:opacity-60 transition-opacity duration-200"
+                  key={client.name}
+                  src={`/logos/${encodeURIComponent(client.file)}`}
+                  alt={client.name}
+                  className="h-7 md:h-8 max-w-[130px] object-contain"
                   style={{ filter: 'brightness(0) invert(1)' }}
                 />
               ))}
@@ -469,7 +499,7 @@ function ServicesSection() {
   return (
     <section id="services" className="py-32 px-6 md:px-12">
       <div className="mb-16 border-l-2 border-[#2563EB] pl-6">
-        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">02 // Core Services</h2>
+        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">03 // Core Services</h2>
         <h3 className="text-4xl md:text-6xl font-black font-display tracking-tighter uppercase leading-none">
           The AI<br />Playbook.
         </h3>
@@ -529,6 +559,7 @@ function LogoMarquee() {
   const logos = [
     'ag1logo.webp',
     'twilio logo.webp',
+    'pixlee logo.webp',
     'evidation logo.webp',
     'Planoly_Logo.webp',
     'begin health logo.webp',
@@ -549,14 +580,14 @@ function LogoMarquee() {
 
   return (
     <div className="py-10 border-y border-white/5 overflow-hidden">
-      <p className="text-[8px] uppercase tracking-[0.4em] opacity-30 text-center mb-8">Brands & Teams I've Worked With</p>
+      <p className="text-xs md:text-sm uppercase tracking-[0.3em] text-white text-center mb-8">Brands &amp; Teams I've Worked With</p>
       <div className="animate-marquee-logos flex items-center whitespace-nowrap w-max">
         {[...logos, ...logos].map((logo, i) => (
           <div key={i} className="mx-10 shrink-0 w-[140px] h-[50px] flex items-center justify-center">
             <img
               src={`/logos/${encodeURIComponent(logo)}`}
               alt=""
-              className="max-w-full max-h-full object-contain opacity-30 hover:opacity-70 transition-opacity duration-300"
+              className="max-w-full max-h-full object-contain opacity-100"
               style={{ filter: 'brightness(0) invert(1)' }}
             />
           </div>
@@ -652,9 +683,11 @@ function FeaturedWorkSection() {
       ref={sectionRef}
       className="relative w-full border-t border-white/5"
     >
-      {/* Full-screen visual layer — absolutely positioned so it doesn't contribute to outer div height */}
+      {/* Full-screen visual layer — absolutely positioned so it doesn't contribute to outer div height.
+          pointer-events-none: after the pin releases this layer overhangs the following section and,
+          being purely decorative, must not swallow clicks landing on it. */}
       <div
-        className="absolute top-0 left-0 w-full h-screen overflow-hidden"
+        className="absolute top-0 left-0 w-full h-screen overflow-hidden pointer-events-none"
         style={{ perspective: '1000px' }}
       >
         {/* CSS atmospheric background — no WebGL cost */}
@@ -662,7 +695,7 @@ function FeaturedWorkSection() {
 
         {/* Section label */}
         <div className="absolute top-12 left-12 z-30 pointer-events-none">
-          <div className="text-[10px] uppercase tracking-widest accent-text mb-1">03 // Featured Work</div>
+          <div className="text-[10px] uppercase tracking-widest accent-text mb-1">04 // Featured Work</div>
           <div className="text-[10px] font-mono opacity-30 uppercase tracking-widest">Scroll to explore</div>
         </div>
 
@@ -814,8 +847,124 @@ function SilkBackground() {
   return <div ref={containerRef} className="absolute inset-0 w-full h-full pointer-events-none" />
 }
 
+const CALENDLY_URL = 'https://calendly.com/brian-cliette/30min?hide_gdpr_banner=1';
+
+let calendlyScript: Promise<void> | null = null;
+
+function loadCalendly(): Promise<void> {
+  if (!calendlyScript) {
+    calendlyScript = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://assets.calendly.com/assets/external/widget.js';
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => { calendlyScript = null; reject(new Error('Calendly widget failed to load')); };
+      document.head.appendChild(script);
+    });
+  }
+  return calendlyScript;
+}
+
+function CalendlyEmbed() {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [status, setStatus] = useState<'idle' | 'ready' | 'error'>('idle');
+
+  // The widget script is ~90KB — hold it off the critical path until the
+  // embed is actually near the viewport.
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    let cancelled = false;
+
+    const observer = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+      loadCalendly()
+        .then(() => {
+          if (cancelled || !hostRef.current) return;
+          window.Calendly?.initInlineWidget({ url: CALENDLY_URL, parentElement: hostRef.current });
+          setStatus('ready');
+        })
+        .catch(() => { if (!cancelled) setStatus('error'); });
+    }, { rootMargin: '200px' });
+
+    observer.observe(host);
+    return () => { cancelled = true; observer.disconnect(); };
+  }, []);
+
+  if (status === 'error') {
+    return (
+      <div className="flex flex-col items-center justify-center gap-5 text-center min-h-[300px]">
+        <p className="text-sm text-white/50 max-w-xs">The scheduler didn't load. You can open it directly instead.</p>
+        <a
+          href={CALENDLY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 bg-[#2563EB] text-white font-black uppercase tracking-tighter text-sm px-8 py-4 rounded-full hover:bg-white hover:text-[#080808] transition-colors duration-200"
+        >
+          Open Scheduler <ArrowUpRight size={16} />
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative rounded-xl overflow-hidden bg-white">
+      {status === 'idle' && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-[10px] uppercase tracking-[0.3em] text-[#080808]/40">Loading calendar…</span>
+        </div>
+      )}
+      <div ref={hostRef} className="min-w-[320px] h-[700px]" />
+    </div>
+  );
+}
+
+type ContactForm = { name: string; email: string; company: string; message: string };
+
+function Field({
+  id, label, type = 'text', placeholder, required = false, textarea = false,
+  value, isFocused, onChange, onFocus, onBlur,
+}: {
+  id: string; label: string; type?: string; placeholder: string; required?: boolean; textarea?: boolean;
+  value: string; isFocused: boolean; onChange: (value: string) => void; onFocus: () => void; onBlur: () => void;
+}) {
+  const baseClass = [
+    'w-full bg-white/5 border rounded-lg px-4 py-3 text-sm placeholder:text-white/20 placeholder:uppercase placeholder:tracking-widest',
+    'focus:outline-none transition-all duration-300 resize-none',
+    isFocused ? 'border-[#2563EB]/60 bg-white/[0.07] shadow-[0_0_0_3px_rgba(37,99,235,0.1)]' : 'border-white/10',
+  ].join(' ');
+  const shared = {
+    id,
+    required,
+    placeholder,
+    value,
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value),
+    onFocus,
+    onBlur,
+  };
+  return (
+    <div className="relative group">
+      <label
+        htmlFor={id}
+        className={`block text-[9px] uppercase tracking-[0.25em] mb-2 transition-colors duration-200 ${
+          isFocused ? 'text-white' : 'text-white/70'
+        }`}
+      >
+        {label}{required && <span className="ml-1 text-[#2563EB]">*</span>}
+      </label>
+      {textarea ? (
+        <textarea {...shared} rows={4} className={baseClass + ' leading-relaxed'} />
+      ) : (
+        <input {...shared} type={type} className={baseClass} />
+      )}
+    </div>
+  );
+}
+
 function ContactSection() {
-  const [form, setForm] = React.useState({ name: '', email: '', company: '', message: '' });
+  const [tab, setTab] = useState<'call' | 'message'>('call');
+  const [form, setForm] = React.useState<ContactForm>({ name: '', email: '', company: '', message: '' });
   const [submitted, setSubmitted] = React.useState(false);
   const [focused, setFocused] = React.useState<string | null>(null);
 
@@ -824,67 +973,58 @@ function ContactSection() {
     setSubmitted(true);
   };
 
-  const Field = ({
-    id, label, type = 'text', placeholder, required = false, textarea = false,
-  }: { id: string; label: string; type?: string; placeholder: string; required?: boolean; textarea?: boolean }) => {
-    const isFocused = focused === id;
-    const baseClass = [
-      'w-full bg-white/5 border rounded-lg px-4 py-3 text-sm placeholder:text-white/20 placeholder:uppercase placeholder:tracking-widest',
-      'focus:outline-none transition-all duration-300 resize-none',
-      isFocused ? 'border-[#2563EB]/60 bg-white/[0.07] shadow-[0_0_0_3px_rgba(37,99,235,0.1)]' : 'border-white/10',
-    ].join(' ');
-    return (
-      <div className="relative group">
-        <label
-          htmlFor={id}
-          className={`block text-[9px] uppercase tracking-[0.25em] mb-2 transition-colors duration-200 ${
-            isFocused ? 'text-white' : 'text-white/70'
-          }`}
-        >
-          {label}{required && <span className="ml-1 text-[#2563EB]">*</span>}
-        </label>
-        {textarea ? (
-          <textarea
-            id={id}
-            rows={4}
-            required={required}
-            placeholder={placeholder}
-            className={baseClass + ' leading-relaxed'}
-            value={form[id as keyof typeof form]}
-            onChange={e => setForm(f => ({ ...f, [id]: e.target.value }))}
-            onFocus={() => setFocused(id)}
-            onBlur={() => setFocused(null)}
-          />
-        ) : (
-          <input
-            id={id}
-            type={type}
-            required={required}
-            placeholder={placeholder}
-            className={baseClass}
-            value={form[id as keyof typeof form]}
-            onChange={e => setForm(f => ({ ...f, [id]: e.target.value }))}
-            onFocus={() => setFocused(id)}
-            onBlur={() => setFocused(null)}
-          />
-        )}
-      </div>
-    );
-  };
+  const fieldProps = (id: keyof ContactForm) => ({
+    id,
+    value: form[id],
+    isFocused: focused === id,
+    onChange: (value: string) => setForm(f => ({ ...f, [id]: value })),
+    onFocus: () => setFocused(id),
+    onBlur: () => setFocused(null),
+  });
+
+  const tabs = [
+    { key: 'call' as const, label: 'Book a Call' },
+    { key: 'message' as const, label: 'Send a Message' },
+  ];
 
   return (
-    <section id="contact-form" className="pt-10 pb-32 px-6 md:px-16">
+    // relative z-10: the pinned Featured Work layer overhangs this section — stack above it.
+    // scroll-mt clears the fixed navbar so anchor jumps don't land the tabs underneath it.
+    <section id="contact-form" className="relative z-10 scroll-mt-28 pt-10 pb-32 px-6 md:px-16">
       <div className="max-w-5xl mx-auto">
 
-        {/* Form / Success */}
+        {/* Path selector */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1" role="tablist">
+            {tabs.map(({ key, label }) => (
+              <button
+                key={key}
+                role="tab"
+                aria-selected={tab === key}
+                onClick={() => setTab(key)}
+                className={`rounded-full px-5 py-2 text-[11px] md:text-xs font-black font-display uppercase tracking-tighter transition-colors duration-200 cursor-pointer ${
+                  tab === key ? 'bg-[#2563EB] text-white' : 'text-white/50 hover:text-white'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Scheduler / Form / Success */}
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-2xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_32px_64px_rgba(0,0,0,0.5)] p-6 md:p-14"
+          className={`rounded-2xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_32px_64px_rgba(0,0,0,0.5)] ${
+            tab === 'call' ? 'p-3 md:p-4' : 'p-6 md:p-14'
+          }`}
         >
-          {submitted ? (
+          {tab === 'call' ? (
+            <CalendlyEmbed />
+          ) : submitted ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -900,9 +1040,9 @@ function ContactSection() {
           ) : (
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 md:gap-x-16 gap-y-8 md:gap-y-10 mb-8 md:mb-10">
-                <Field id="name" label="Full Name" placeholder="Your name" required />
-                <Field id="email" label="Email" type="email" placeholder="you@company.com" required />
-                <Field id="company" label="Company" placeholder="Where do you work?" />
+                <Field {...fieldProps('name')} label="Full Name" placeholder="Your name" required />
+                <Field {...fieldProps('email')} label="Email" type="email" placeholder="you@company.com" required />
+                <Field {...fieldProps('company')} label="Company" placeholder="Where do you work?" />
                 <div className="flex items-end">
                   <div className="text-[11px] uppercase tracking-[0.25em] text-white/30 leading-relaxed">
                     Clients typically include Series&nbsp;A–C SaaS,
@@ -910,7 +1050,7 @@ function ContactSection() {
                   </div>
                 </div>
               </div>
-              <Field id="message" label="What are you working on?" placeholder="What's broken, what you need built, and when it needs to work." required textarea />
+              <Field {...fieldProps('message')} label="What are you working on?" placeholder="What's broken, what you need built, and when it needs to work." required textarea />
 
               <div className="mt-8 md:mt-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                 <p className="text-[10px] uppercase tracking-widest text-white/20">
@@ -954,12 +1094,20 @@ function Footer({ onContact }: { onContact: () => void }) {
           <h2 className="text-[12vw] md:text-[8vw] font-black font-display uppercase tracking-tighter leading-[0.8] mb-0">Let's<br />Build.</h2>
         </motion.div>
 
-        <button
-          onClick={onContact}
-          className="mt-8 md:mt-0 flex items-center gap-4 text-base md:text-lg tracking-tighter uppercase font-bold hover:text-[#2563EB] transition-colors duration-200 cursor-pointer py-3"
-        >
-          Send a Message <ArrowUpRight size={24} />
-        </button>
+        <div className="mt-8 md:mt-0 flex flex-col items-start md:items-end gap-3">
+          <a
+            href="#contact-form"
+            className="flex items-center gap-4 bg-[#2563EB] text-white text-base md:text-lg tracking-tighter uppercase font-bold px-7 py-3 rounded-full hover:bg-white hover:text-[#080808] transition-colors duration-200"
+          >
+            Book a Call <ArrowUpRight size={24} />
+          </a>
+          <button
+            onClick={onContact}
+            className="flex items-center gap-4 text-base md:text-lg tracking-tighter uppercase font-bold opacity-60 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200 cursor-pointer py-2"
+          >
+            Send a Message <ArrowUpRight size={24} />
+          </button>
+        </div>
       </div>
 
       <div className="mt-auto border-t brutal-border pt-6 flex flex-col md:flex-row justify-between items-center gap-8 md:gap-0">
