@@ -11,9 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Preload hero image -->
     <link rel="preload" as="image" href="/brian_hero_final.webp" type="image/webp" fetchpriority="high" />
-    <!-- Calendly is booted on idle rather than on scroll; warming the connections
-         early removes the DNS/TLS cost from the widget's first paint -->
-    <link rel="preconnect" href="https://assets.calendly.com" crossorigin />
+    <!-- The scheduler iframe is attached on idle; warming the connection early
+         removes the DNS/TLS cost from its first paint -->
     <link rel="preconnect" href="https://calendly.com" crossorigin />
     <!-- DNS prefetch for social links -->
     <link rel="dns-prefetch" href="https://linkedin.com" />

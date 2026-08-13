@@ -310,6 +310,18 @@ The widget renders on a white card. Calendly's dark-theme params (`background_co
 feature, so the URL was left exactly as supplied and the widget wrapped in a deliberate white rounded panel.
 If Brian's plan supports custom colors, we can switch it to the site's palette in one line.
 
+**Loading jank — measured and fixed.** Calendly's `widget.js` cost **457ms of main-thread blocking versus
+10ms with Calendly blocked**, with a 294ms task landing ~1.6s in, right over the hero animation. Two changes:
+
+1. **Dropped `widget.js` entirely.** All it does is build an iframe carrying `embed_domain` and
+   `embed_type=Inline`; the embed now constructs that iframe directly, so the script never loads.
+2. **Armed ~2 screens out** rather than at page load. Attaching at load put the remaining frame-setup cost
+   over the hero; attaching on arrival meant watching it load. An `IntersectionObserver` with
+   `rootMargin: 2000px` splits the difference — measured 2589px (~2.6 screens) of lead, and the hero window
+   drops to 191ms, matching the Calendly-blocked baseline.
+
+CLS is 0.0000 throughout — the height fallback was never the problem.
+
 **Boots on idle, not on scroll.** Waiting for the section to come into view meant the visitor watched it
 load. It now boots on `requestIdleCallback` after `load` (measured: first Calendly request at +1039ms, iframe
 present with no scrolling at all), with preconnects to `assets.calendly.com` and `calendly.com` in

@@ -224,10 +224,9 @@ function ScrollProgress() {
 const NAV_LINKS = [
   { href: '#about',    label: 'About' },
   { href: '#services', label: 'Services' },
-  // "Work" covers the featured deck and the case studies that follow it —
-  // one chapter, one nav entry.
+  // "Work" covers the featured deck, the case studies and the receipts that
+  // follow it — one chapter, one nav entry.
   { href: '#work',     label: 'Work' },
-  { href: '#proof',    label: 'Receipts' },
 ];
 
 function Navbar() {
@@ -843,28 +842,27 @@ function SilkBackground() {
 
 const CALENDLY_URL = 'https://calendly.com/brian-cliette/30min?hide_gdpr_banner=1';
 
-let calendlyScript: Promise<void> | null = null;
-
-function loadCalendly(): Promise<void> {
-  if (!calendlyScript) {
-    calendlyScript = new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = 'https://assets.calendly.com/assets/external/widget.js';
-      script.async = true;
-      script.onload = () => resolve();
-      script.onerror = () => { calendlyScript = null; reject(new Error('Calendly widget failed to load')); };
-      document.head.appendChild(script);
-    });
-  }
-  return calendlyScript;
-}
-
 // Tall enough to render the picker without an inner scrollbar before Calendly
-// reports its real height; it self-corrects within a second of loading.
+// reports its real height; it self-corrects on the first page_height message.
 const CALENDLY_FALLBACK_HEIGHT = 1050;
+
+/**
+ * Calendly's widget.js exists to build an iframe carrying `embed_domain` and
+ * `embed_type`, and costs ~450ms of main-thread blocking to do it — measured
+ * against 10ms with it blocked. Building the same iframe ourselves keeps the
+ * scheduler and drops the script, so the booking flow can warm up without
+ * stuttering the hero.
+ */
+function calendlyEmbedSrc(): string {
+  const url = new URL(CALENDLY_URL);
+  url.searchParams.set('embed_domain', window.location.hostname);
+  url.searchParams.set('embed_type', 'Inline');
+  return url.toString();
+}
 
 function CalendlyEmbed() {
   const hostRef = useRef<HTMLDivElement>(null);
+  const [src, setSrc] = useState<string | null>(null);
   const [status, setStatus] = useState<'idle' | 'ready' | 'error'>('idle');
   const [height, setHeight] = useState(CALENDLY_FALLBACK_HEIGHT);
 
@@ -887,36 +885,34 @@ function CalendlyEmbed() {
   // as the page goes idle: the scheduler is ready long before anyone reaches
   // the section, while still staying off the critical path so it can't slow
   // the hero down.
+  // Attaching at page load put ~500ms of frame setup right where the hero is
+  // animating, which is what the stutter was. Attaching on arrival is the other
+  // extreme — you watch it load. So: arm it roughly two screens out. The hero is
+  // long done, and there's still several seconds of scrolling before it's needed.
   useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
     let cancelled = false;
 
-    const boot = () => {
-      loadCalendly()
-        .then(() => {
-          if (cancelled || !hostRef.current) return;
-          window.Calendly?.initInlineWidget({ url: CALENDLY_URL, parentElement: hostRef.current });
-          setStatus('ready');
-        })
-        .catch(() => { if (!cancelled) setStatus('error'); });
-    };
-
-    const schedule = () => {
+    const observer = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
       const idle = window.requestIdleCallback;
-      if (idle) idle(boot, { timeout: 2000 });
-      else setTimeout(boot, 800);
-    };
+      const boot = () => { if (!cancelled) setSrc(calendlyEmbedSrc()); };
+      if (idle) idle(boot, { timeout: 1000 });
+      else boot();
+    }, { rootMargin: '2000px 0px' });
 
-    if (document.readyState === 'complete') {
-      schedule();
-    } else {
-      window.addEventListener('load', schedule, { once: true });
-    }
-
-    return () => {
-      cancelled = true;
-      window.removeEventListener('load', schedule);
-    };
+    observer.observe(host);
+    return () => { cancelled = true; observer.disconnect(); };
   }, []);
+
+  // If the frame never paints, fall back to opening Calendly directly.
+  useEffect(() => {
+    if (!src || status !== 'idle') return;
+    const timer = setTimeout(() => setStatus(s => (s === 'idle' ? 'error' : s)), 12000);
+    return () => clearTimeout(timer);
+  }, [src, status]);
 
   if (status === 'error') {
     return (
@@ -936,12 +932,23 @@ function CalendlyEmbed() {
 
   return (
     <div className="relative rounded-xl overflow-hidden bg-white">
-      {status === 'idle' && (
+      {status !== 'ready' && (
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="text-[10px] uppercase tracking-[0.3em] text-[#080808]/40">Loading calendar…</span>
         </div>
       )}
-      <div ref={hostRef} className="min-w-[320px]" style={{ height }} />
+      <div ref={hostRef} className="absolute inset-x-0 top-0 h-px pointer-events-none" aria-hidden="true" />
+      {src ? (
+        <iframe
+          src={src}
+          title="Book a call with Brian Cliette"
+          onLoad={() => setStatus('ready')}
+          className="block w-full min-w-[320px] border-0"
+          style={{ height }}
+        />
+      ) : (
+        <div className="min-w-[320px]" style={{ height }} />
+      )}
     </div>
   );
 }
