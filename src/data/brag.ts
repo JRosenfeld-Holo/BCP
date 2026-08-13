@@ -78,7 +78,7 @@ export const BRAG_ITEMS: BragItem[] = [
     alt: 'Deepinvent #Deepinvent4Good Inventathon results board showing Brian Cliette in third place',
     // 16/9 matches the capture: a 4/3 box crops the outer podium cards away
     ratio: 'wide',
-    title: 'Third Place.',
+    title: 'Finalist.',
     caption:
       '#Deepinvent4Good Virtual Inventathon — a hybrid dual-functional magnetic-electro filter cartridge with smart sensing, adaptive regeneration and integrated PFAS/microplastic waste management.',
     meta: 'August 7–21, 2025',
