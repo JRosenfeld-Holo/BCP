@@ -167,7 +167,7 @@ function HomePage() {
         <div className="w-8 h-8 border-b border-l border-[#2563EB]" />
       </div>
       <ScrollProgress />
-      <Navbar onContact={openContact} />
+      <Navbar />
       <HeroSection />
       <LogoMarquee />
       <AboutSection />
@@ -218,7 +218,15 @@ function ScrollProgress() {
   );
 }
 
-function Navbar({ onContact }: { onContact: () => void }) {
+// Mirrors the numbered sections on the page, in page order.
+const NAV_LINKS = [
+  { href: '#about',    label: 'About' },
+  { href: '#services', label: 'Services' },
+  { href: '#work',     label: 'Work' },
+  { href: '#proof',    label: 'Receipts' },
+];
+
+function Navbar() {
   return (
     <motion.div
       initial={{ y: -60, opacity: 0 }}
@@ -236,10 +244,15 @@ function Navbar({ onContact }: { onContact: () => void }) {
           </span>
           <div className="w-px h-4 bg-white/20 mx-5 shrink-0" />
           <div className="flex gap-5 md:gap-7 items-center text-[13px] md:text-[15px] uppercase tracking-tighter font-black font-display">
-            <a href="#about" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">About</a>
-            <a href="#services" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">Services</a>
-            <a href="#work" className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200">Work</a>
-            <button onClick={onContact} className="hidden sm:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200 cursor-pointer">Message</button>
+            {NAV_LINKS.map(link => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="hidden md:block opacity-75 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200"
+              >
+                {link.label}
+              </a>
+            ))}
             <a href="#contact-form" className="bg-[#2563EB] text-white rounded-full px-4 py-2 hover:opacity-80 transition-opacity duration-200 cursor-pointer">Book a Call</a>
           </div>
         </div>
@@ -384,7 +397,7 @@ function AboutSection() {
   ];
 
   return (
-    <section id="about" className="border-t border-white/5 overflow-hidden">
+    <section id="about" className="scroll-mt-28 border-t border-white/5 overflow-hidden">
       <div className="flex flex-col md:flex-row min-h-[700px]">
 
         {/* Content column */}
@@ -474,7 +487,7 @@ function AboutSection() {
 function ServicesSection() {
   const navigate = useNavigate();
   return (
-    <section id="services" className="py-32 px-6 md:px-12">
+    <section id="services" className="scroll-mt-28 py-32 px-6 md:px-12">
       <div className="mb-16 border-l-2 border-[#2563EB] pl-6">
         <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">02 // Core Services</h2>
         <h3 className="text-4xl md:text-6xl font-black font-display tracking-tighter uppercase leading-none">
@@ -658,7 +671,7 @@ function FeaturedWorkSection() {
     <div
       id="work"
       ref={sectionRef}
-      className="relative w-full border-t border-white/5"
+      className="scroll-mt-28 relative w-full border-t border-white/5"
     >
       {/* Full-screen visual layer — absolutely positioned so it doesn't contribute to outer div height.
           pointer-events-none: after the pin releases this layer overhangs the following section and,
