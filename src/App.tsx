@@ -12,6 +12,7 @@ import brianHeroMinimalist from '../brian_hero_final.webp';
 import { MinimalistHero } from '@/components/ui/minimalist-hero';
 import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
 import { BragWall, TestimonialCarousel } from './BragSection';
+import { CaseStudySection } from './CaseStudySection';
 import athleticGreensImg from '../athletic greens .webp';
 import twilioImg from '../twilio_fin.webp';
 import evidationImg from '../evidation_health.webp';
@@ -173,6 +174,7 @@ function HomePage() {
       <AboutSection />
       <ServicesSection />
       <FeaturedWorkSection />
+      <CaseStudySection />
       <BragWall />
       <TestimonialCarousel />
       <Suspense fallback={<div className="h-screen border-t border-white/5" />}>
@@ -223,6 +225,7 @@ const NAV_LINKS = [
   { href: '#about',    label: 'About' },
   { href: '#services', label: 'Services' },
   { href: '#work',     label: 'Work' },
+  { href: '#case-studies', label: 'Cases' },
   { href: '#proof',    label: 'Receipts' },
 ];
 

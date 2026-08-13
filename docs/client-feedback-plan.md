@@ -27,8 +27,8 @@ Hero
   → About (01)        ← stats + "As Featured In" as a 50/50 row
   → Services (02)
   → FeaturedWork (03) ← GSAP deck stays
-  → CaseStudies       ← pending content; slots in below Featured Work
-  → BragWall (04)     ← "Receipts" — native cards, not screenshots
+  → CaseStudies (04)  ← 17 engagements, carousel
+  → BragWall (05)     ← "Receipts" — native cards, not screenshots
   → Testimonials
   → Funnel
   → Contact           ← Calendly + form, dual CTA
@@ -117,7 +117,7 @@ logos the same way; the rest are clean at full opacity.
 
 ---
 
-## Workstream 3 — Case studies replace Featured Work
+## Workstream 3 — Case studies ✅ IMPLEMENTED
 
 **Feedback:** *"I have these case studies... skills, tools, background of what I did for that client, the
 highlights, the platforms used, the targeted demographics, the price point... replacing this kind of section
@@ -357,7 +357,7 @@ These aren't client feedback, but they affect whether the feedback can be implem
 
 | Need | For | Status |
 |---|---|---|
-| MarketerHire case study content | Workstream 3 | **still outstanding — the last real blocker** |
+| MarketerHire case study content | Workstream 3 | ✅ received as PDF and transcribed |
 | Brag folder images | Workstream 4 | ✅ received and catalogued |
 | Calendly public event URL | Workstream 5 | ✅ received and live |
 | Clean Pixlee + a16z logos | Workstream 2 | ✅ sourced and processed |
@@ -431,3 +431,28 @@ a dark background.
 **Outstanding caveat:** the About logo row is labelled "Clients I've Worked With", which presents a16z as a
 client. They backed Pixlee rather than engaging Brian directly. Kept as directed — worth Brian confirming
 he's comfortable stating it that way, since an investor logo is the kind a prospect may check.
+
+---
+
+## Case studies — how the content was recovered
+
+The Figma board couldn't be pulled: Figma's CloudFront returns 403 to automated browsers before any auth
+check, and FigJam text is canvas-rendered so scraping wouldn't yield text regardless.
+
+The PDF export solved it, but not directly — it's a single 1435×3484pt page holding one raster image, so
+`pdftotext` returns nothing. Rendering it at 200 DPI (3987×9678) and cropping the 3×6 card grid produced
+18 legible tiles, transcribed by reading each one.
+
+**17 unique case studies** — Begin Health appears twice on the board with different date ranges
+(Jan–Mar and Mar–Jun 2022) and an identical highlight, so those are merged into one entry spanning
+Jan – Jun 2022.
+
+Data lives in [src/data/caseStudies.ts](../src/data/caseStudies.ts); the section is
+[src/CaseStudySection.tsx](../src/CaseStudySection.tsx), mounted below Featured Work as `04 // Case Studies`
+with Receipts renumbered to 05. Nav gained a "Cases" link.
+
+**Ordering is by brand recognition, not date** — Twilio, Athletic Greens, Pixlee, Evidation lead.
+
+**One deliberate departure from the testimonial carousel: no auto-advance.** Testimonials are one-sentence
+quotes where a 7-second rotation works. A case study is a ~100-word narrative plus nine tag groups; rotating
+it out mid-read would be hostile. Arrows, dots, and scoped keyboard navigation are all identical.
