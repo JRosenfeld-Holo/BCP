@@ -171,10 +171,10 @@ function HomePage() {
       <HeroSection />
       <LogoMarquee />
       <AboutSection />
-      <BragWall />
-      <TestimonialCarousel />
       <ServicesSection />
       <FeaturedWorkSection />
+      <BragWall />
+      <TestimonialCarousel />
       <Suspense fallback={<div className="h-screen border-t border-white/5" />}>
         <FunnelSection />
       </Suspense>
@@ -383,14 +383,6 @@ function AboutSection() {
     { name: 'Penn State',   src: '/press/pennstate.svg' },
   ];
 
-  // The four marks Brian called out by name.
-  const clients = [
-    { name: 'Twilio', file: 'twilio logo.webp' },
-    { name: 'AG1',    file: 'ag1logo.webp' },
-    { name: 'Pixlee', file: 'pixlee logo.webp' },
-    { name: 'a16z',   file: 'a16z logo.webp' },
-  ];
-
   return (
     <section id="about" className="border-t border-white/5 overflow-hidden">
       <div className="flex flex-col md:flex-row min-h-[700px]">
@@ -455,21 +447,6 @@ function AboutSection() {
             </div>
           </div>
 
-          {/* Named brand marks, placed where Brian asked for them */}
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.3em] text-white mb-6">Clients I've Worked With</p>
-            <div className="flex flex-wrap items-center gap-x-10 gap-y-6">
-              {clients.map(client => (
-                <img
-                  key={client.name}
-                  src={`/logos/${encodeURIComponent(client.file)}`}
-                  alt={client.name}
-                  className="h-7 md:h-8 max-w-[130px] object-contain"
-                  style={{ filter: 'brightness(0) invert(1)' }}
-                />
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Scroll-animated frame canvas — right side */}
@@ -499,7 +476,7 @@ function ServicesSection() {
   return (
     <section id="services" className="py-32 px-6 md:px-12">
       <div className="mb-16 border-l-2 border-[#2563EB] pl-6">
-        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">03 // Core Services</h2>
+        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">02 // Core Services</h2>
         <h3 className="text-4xl md:text-6xl font-black font-display tracking-tighter uppercase leading-none">
           The AI<br />Playbook.
         </h3>
@@ -559,6 +536,7 @@ function LogoMarquee() {
   const logos = [
     'ag1logo.webp',
     'twilio logo.webp',
+    'a16z logo.webp',
     'pixlee logo.webp',
     'evidation logo.webp',
     'Planoly_Logo.webp',
@@ -572,7 +550,6 @@ function LogoMarquee() {
     'five star jewelers.webp',
     'cc-stacked-logo.webp',
     'flysupply logo.webp',
-    'weco logo.webp',
     'BrandBossHQ-Logo-Dark.webp',
     'Waliy Ai.webp',
     'startearly-logo-new-purple.svg',
@@ -695,7 +672,7 @@ function FeaturedWorkSection() {
 
         {/* Section label */}
         <div className="absolute top-12 left-12 z-30 pointer-events-none">
-          <div className="text-[10px] uppercase tracking-widest accent-text mb-1">04 // Featured Work</div>
+          <div className="text-[10px] uppercase tracking-widest accent-text mb-1">03 // Featured Work</div>
           <div className="text-[10px] font-mono opacity-30 uppercase tracking-widest">Scroll to explore</div>
         </div>
 
@@ -865,9 +842,29 @@ function loadCalendly(): Promise<void> {
   return calendlyScript;
 }
 
+// Tall enough to render the picker without an inner scrollbar before Calendly
+// reports its real height; it self-corrects within a second of loading.
+const CALENDLY_FALLBACK_HEIGHT = 1050;
+
 function CalendlyEmbed() {
   const hostRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<'idle' | 'ready' | 'error'>('idle');
+  const [height, setHeight] = useState(CALENDLY_FALLBACK_HEIGHT);
+
+  // Calendly broadcasts `calendly.page_height` whenever its content resizes
+  // (loading, picking a date, opening the form). Growing the host to match is
+  // what keeps the booking flow from scrolling inside its own iframe.
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (!String(e.origin).includes('calendly.com')) return;
+      const data = e.data as { event?: string; payload?: { height?: string } };
+      if (data?.event !== 'calendly.page_height') return;
+      const px = parseInt(data.payload?.height ?? '', 10);
+      if (Number.isFinite(px) && px > 0) setHeight(px);
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
 
   // The widget script is ~90KB — hold it off the critical path until the
   // embed is actually near the viewport.
@@ -915,7 +912,7 @@ function CalendlyEmbed() {
           <span className="text-[10px] uppercase tracking-[0.3em] text-[#080808]/40">Loading calendar…</span>
         </div>
       )}
-      <div ref={hostRef} className="min-w-[320px] h-[700px]" />
+      <div ref={hostRef} className="min-w-[320px]" style={{ height }} />
     </div>
   );
 }

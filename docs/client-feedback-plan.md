@@ -23,15 +23,19 @@ Source: Brian Cliette Loom walkthrough (7:13). Site under review: `briancliette.
 
 ```
 Hero
-  → PressBar          ← NEW: "As Featured In", full-color, prominent
-  → About             ← + brand logo row (Twilio / AG1 / Pixlee / a16z) where press used to be
-  → BragWall          ← NEW: card gallery of speaking / hackathon / viral-review screenshots
-  → Services
-  → CaseStudies       ← REPLACES FeaturedWork
+  → LogoMarquee       ← white heading + full-opacity logos; a16z added, weco removed
+  → About (01)        ← stats + "As Featured In" as a 50/50 row
+  → Services (02)
+  → FeaturedWork (03) ← GSAP deck stays
+  → CaseStudies       ← pending content; slots in below Featured Work
+  → BragWall (04)     ← "Receipts" — native cards, not screenshots
+  → Testimonials
   → Funnel
-  → Contact           ← Calendly embed + form, dual CTA
+  → Contact           ← Calendly + form, dual CTA
   → Footer
 ```
+
+Client logos live only in the marquee — an About-section repeat was built and then removed as duplicative.
 
 ---
 
@@ -97,9 +101,11 @@ and reverted, so I'd only apply chips to the press bar if a clean asset can't be
 
 ### Built
 
-A **Clients I've Worked With** row now sits directly below the stats/press row in About — Twilio, AG1,
-Pixlee, a16z at `h-7/h-8` in full white, exactly where Brian pointed. (Label set by direction; see the
-a16z caveat under Decisions.)
+**a16z now rides in the marquee** alongside Twilio, AG1 and Pixlee. A separate "Clients I've Worked With"
+row was built in About and then removed — it duplicated the marquee.
+
+**`weco logo.webp` removed from the marquee.** At full white it renders as an unreadable rectangle; the
+source has no usable silhouette. Re-source it if Weco needs to stay listed.
 
 **Marquee legibility.** Heading went `text-[8px]/opacity-30 → text-xs/sm` solid white; logos went
 `opacity-30 → opacity-100`.
@@ -288,6 +294,12 @@ calendar renders, tabs switch, and the form retains focus through typing.
 The widget renders on a white card. Calendly's dark-theme params (`background_color` etc.) are a paid-plan
 feature, so the URL was left exactly as supplied and the widget wrapped in a deliberate white rounded panel.
 If Brian's plan supports custom colors, we can switch it to the site's palette in one line.
+
+**No inner scrollbar.** The embed originally sat in a fixed 700px box, so the booking flow scrolled inside
+its own iframe. Calendly broadcasts a `calendly.page_height` postMessage on every content resize (measured:
+1013px → 1059px on load); the host now listens and grows to match, falling back to 1050px until the first
+message lands. Verified in both states — calendar view and after picking a date, with time slots open —
+that the iframe's `scrollHeight` equals its `clientHeight`.
 
 **Not done — the form still doesn't send.** See pre-existing issue 1. Spam controls (honeypot, rate limit)
 were deliberately deferred to land with that wiring; adding them now would guard an endpoint that
