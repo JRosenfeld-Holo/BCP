@@ -449,7 +449,8 @@ Jan – Jun 2022.
 
 Data lives in [src/data/caseStudies.ts](../src/data/caseStudies.ts); the section is
 [src/CaseStudySection.tsx](../src/CaseStudySection.tsx), mounted below Featured Work as `04 // Case Studies`
-with Receipts renumbered to 05. Nav gained a "Cases" link.
+with Receipts renumbered to 05. Nav deliberately does *not* get its own "Cases" entry — the featured deck and the case studies are one
+"Work" chapter, so a second link would be redundant. `#case-studies` stays addressable for direct links.
 
 **Ordering is by brand recognition, not date** — Twilio, Athletic Greens, Pixlee, Evidation lead.
 

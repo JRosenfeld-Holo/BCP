@@ -224,8 +224,9 @@ function ScrollProgress() {
 const NAV_LINKS = [
   { href: '#about',    label: 'About' },
   { href: '#services', label: 'Services' },
+  // "Work" covers the featured deck and the case studies that follow it —
+  // one chapter, one nav entry.
   { href: '#work',     label: 'Work' },
-  { href: '#case-studies', label: 'Cases' },
   { href: '#proof',    label: 'Receipts' },
 ];
 
