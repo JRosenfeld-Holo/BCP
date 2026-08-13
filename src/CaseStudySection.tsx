@@ -78,7 +78,7 @@ export function CaseStudySection() {
       aria-label="Client case studies"
     >
       <div className="mb-16 border-l-2 border-[#2563EB] pl-6">
-        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">04 // Case Studies</h2>
+        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">Case Studies</h2>
         <h3 className="text-4xl md:text-6xl font-black font-display tracking-tighter uppercase leading-none">
           The Full<br />Engagement.
         </h3>

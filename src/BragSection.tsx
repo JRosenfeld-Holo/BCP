@@ -183,7 +183,7 @@ export function BragWall() {
     // decorative layer, which overhangs the sections that follow it.
     <section id="proof" className="relative z-10 scroll-mt-28 py-32 px-6 md:px-12 border-t border-white/5">
       <div className="mb-16 border-l-2 border-[#2563EB] pl-6">
-        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">05 // Receipts</h2>
+        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">Receipts</h2>
         <h3 className="text-4xl md:text-6xl font-black font-display tracking-tighter uppercase leading-none">
           Proof of<br />Work.
         </h3>

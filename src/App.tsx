@@ -407,7 +407,7 @@ function AboutSection() {
         {/* Content column */}
         <div className="w-full md:w-3/5 pt-20 md:pt-40 pb-16 px-8 md:px-16 flex flex-col">
           <div className="mb-10 border-l-2 border-[#2563EB] pl-6">
-            <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">01 // Origin Story</h2>
+            <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">Origin Story</h2>
             <h3 className="text-4xl md:text-5xl font-black font-display tracking-tighter uppercase leading-none">
               Operator.<br />Architect.<br />Already Shipped It.
             </h3>
@@ -493,7 +493,7 @@ function ServicesSection() {
   return (
     <section id="services" className="scroll-mt-28 py-32 px-6 md:px-12">
       <div className="mb-16 border-l-2 border-[#2563EB] pl-6">
-        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">02 // Core Services</h2>
+        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">Core Services</h2>
         <h3 className="text-4xl md:text-6xl font-black font-display tracking-tighter uppercase leading-none">
           The AI<br />Playbook.
         </h3>
@@ -689,7 +689,7 @@ function FeaturedWorkSection() {
 
         {/* Section label */}
         <div className="absolute top-12 left-12 z-30 pointer-events-none">
-          <div className="text-[10px] uppercase tracking-widest accent-text mb-1">03 // Featured Work</div>
+          <div className="text-[10px] uppercase tracking-widest accent-text mb-1">Featured Work</div>
           <div className="text-[10px] font-mono opacity-30 uppercase tracking-widest">Scroll to explore</div>
         </div>
 
