@@ -883,16 +883,14 @@ function CalendlyEmbed() {
     return () => window.removeEventListener('message', onMessage);
   }, []);
 
-  // The widget script is ~90KB — hold it off the critical path until the
-  // embed is actually near the viewport.
+  // Booting on scroll meant the visitor watched it load. Instead, boot as soon
+  // as the page goes idle: the scheduler is ready long before anyone reaches
+  // the section, while still staying off the critical path so it can't slow
+  // the hero down.
   useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
     let cancelled = false;
 
-    const observer = new IntersectionObserver(entries => {
-      if (!entries[0].isIntersecting) return;
-      observer.disconnect();
+    const boot = () => {
       loadCalendly()
         .then(() => {
           if (cancelled || !hostRef.current) return;
@@ -900,10 +898,24 @@ function CalendlyEmbed() {
           setStatus('ready');
         })
         .catch(() => { if (!cancelled) setStatus('error'); });
-    }, { rootMargin: '200px' });
+    };
 
-    observer.observe(host);
-    return () => { cancelled = true; observer.disconnect(); };
+    const schedule = () => {
+      const idle = window.requestIdleCallback;
+      if (idle) idle(boot, { timeout: 2000 });
+      else setTimeout(boot, 800);
+    };
+
+    if (document.readyState === 'complete') {
+      schedule();
+    } else {
+      window.addEventListener('load', schedule, { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener('load', schedule);
+    };
   }, []);
 
   if (status === 'error') {

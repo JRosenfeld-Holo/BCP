@@ -310,6 +310,11 @@ The widget renders on a white card. Calendly's dark-theme params (`background_co
 feature, so the URL was left exactly as supplied and the widget wrapped in a deliberate white rounded panel.
 If Brian's plan supports custom colors, we can switch it to the site's palette in one line.
 
+**Boots on idle, not on scroll.** Waiting for the section to come into view meant the visitor watched it
+load. It now boots on `requestIdleCallback` after `load` (measured: first Calendly request at +1039ms, iframe
+present with no scrolling at all), with preconnects to `assets.calendly.com` and `calendly.com` in
+`index.html`. Still off the critical path, so the hero is unaffected.
+
 **No inner scrollbar.** The embed originally sat in a fixed 700px box, so the booking flow scrolled inside
 its own iframe. Calendly broadcasts a `calendly.page_height` postMessage on every content resize (measured:
 1013px → 1059px on load); the host now listens and grows to match, falling back to 1050px until the first

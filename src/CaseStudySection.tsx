@@ -77,14 +77,38 @@ export function CaseStudySection() {
       aria-roledescription="carousel"
       aria-label="Client case studies"
     >
-      <div className="mb-16 border-l-2 border-[#2563EB] pl-6">
-        <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">Case Studies</h2>
-        <h3 className="text-4xl md:text-6xl font-black font-display tracking-tighter uppercase leading-none">
-          The Full<br />Engagement.
-        </h3>
-        <p className="text-sm opacity-50 leading-relaxed mt-6 max-w-md">
-          {CASE_STUDIES.length} engagements — the brief, the stack, the number it moved.
-        </p>
+      {/* Controls live in the header, not centred on the card: card height
+          swings ~200px between engagements, which would drift the arrows. */}
+      <div className="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+        <div className="border-l-2 border-[#2563EB] pl-6">
+          <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">Case Studies</h2>
+          <h3 className="text-4xl md:text-6xl font-black font-display tracking-tighter uppercase leading-none">
+            The Full<br />Engagement.
+          </h3>
+          <p className="text-sm opacity-50 leading-relaxed mt-6 max-w-md">
+            {CASE_STUDIES.length} engagements — the brief, the stack, the number it moved.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 shrink-0 pl-6 md:pl-0">
+          <span className="font-mono text-[11px] opacity-40 mr-1">
+            {String(index + 1).padStart(2, '0')} / {String(CASE_STUDIES.length).padStart(2, '0')}
+          </span>
+          <button
+            onClick={prev}
+            aria-label="Previous case study"
+            className="w-11 h-11 rounded-full flex items-center justify-center brutal-border bg-[#080808] opacity-60 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200 cursor-pointer"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            onClick={next}
+            aria-label="Next case study"
+            className="w-11 h-11 rounded-full flex items-center justify-center brutal-border bg-[#080808] opacity-60 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200 cursor-pointer"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
       </div>
 
       <div className="relative max-w-6xl mx-auto">
@@ -102,14 +126,9 @@ export function CaseStudySection() {
             >
               {/* Narrative */}
               <div className="flex flex-col">
-                <div className="flex items-baseline gap-4 flex-wrap mb-1">
-                  <h4 className="text-3xl md:text-5xl font-black font-display uppercase tracking-tighter leading-none">
-                    {study.client}
-                  </h4>
-                  <span className="font-mono text-[11px] opacity-30">
-                    {String(index + 1).padStart(2, '0')} / {String(CASE_STUDIES.length).padStart(2, '0')}
-                  </span>
-                </div>
+                <h4 className="text-3xl md:text-5xl font-black font-display uppercase tracking-tighter leading-none mb-1">
+                  {study.client}
+                </h4>
                 <p className="text-sm accent-text font-bold mb-5">{study.role}</p>
 
                 {/* The number it moved — the reason this card exists */}
@@ -141,39 +160,6 @@ export function CaseStudySection() {
               </div>
             </motion.div>
           </AnimatePresence>
-        </div>
-
-        <button
-          onClick={prev}
-          aria-label="Previous case study"
-          className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5 w-10 h-10 rounded-full items-center justify-center brutal-border bg-[#080808] opacity-50 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200 cursor-pointer"
-        >
-          <ChevronLeft size={18} />
-        </button>
-        <button
-          onClick={next}
-          aria-label="Next case study"
-          className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-5 w-10 h-10 rounded-full items-center justify-center brutal-border bg-[#080808] opacity-50 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200 cursor-pointer"
-        >
-          <ChevronRight size={18} />
-        </button>
-
-        {/* Mobile/tablet controls, since the side arrows are hidden there */}
-        <div className="flex lg:hidden items-center justify-center gap-4 mt-8">
-          <button
-            onClick={prev}
-            aria-label="Previous case study"
-            className="w-10 h-10 rounded-full flex items-center justify-center brutal-border bg-[#080808] opacity-70 hover:opacity-100 transition-opacity duration-200 cursor-pointer"
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <button
-            onClick={next}
-            aria-label="Next case study"
-            className="w-10 h-10 rounded-full flex items-center justify-center brutal-border bg-[#080808] opacity-70 hover:opacity-100 transition-opacity duration-200 cursor-pointer"
-          >
-            <ChevronRight size={18} />
-          </button>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-2 mt-8" role="tablist" aria-label="Select case study">
