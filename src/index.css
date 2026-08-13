@@ -70,11 +70,13 @@ body {
 }
 
 /* Animated gradient text */
-/* Carousel progress fill. A CSS animation (not a JS tween) so that
-   animation-play-state can genuinely freeze it mid-run on hover. */
-@keyframes brag-progress {
-  from { width: 0%; }
-  to { width: 100%; }
+/* Horizontal card rails scroll natively; the scrollbar itself is noise. */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes gradient-flow {

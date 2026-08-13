@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { ArrowUpRight, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import { FaXTwitter, FaInstagram } from 'react-icons/fa6';
 import { BRAG_ITEMS, TESTIMONIALS, TESTIMONIAL_CONTEXT, type BragItem } from './data/brag';
@@ -211,158 +211,113 @@ export function BragWall() {
   );
 }
 
-const INTERVAL_MS = 7000;
-
 export function TestimonialCarousel() {
-  const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState<1 | -1>(1);
-  const [paused, setPaused] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
 
-  const go = useCallback((next: number, dir: 1 | -1) => {
-    setDirection(dir);
-    setIndex((next + TESTIMONIALS.length) % TESTIMONIALS.length);
+  const syncEdges = useCallback(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    setAtStart(rail.scrollLeft <= 2);
+    setAtEnd(rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 2);
   }, []);
 
-  const prev = useCallback(() => go(index - 1, -1), [index, go]);
-  const next = useCallback(() => go(index + 1, 1), [index, go]);
-
   useEffect(() => {
-    if (paused) return;
-    timerRef.current = setInterval(() => go(index + 1, 1), INTERVAL_MS);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [index, paused, go]);
+    syncEdges();
+    window.addEventListener('resize', syncEdges);
+    return () => window.removeEventListener('resize', syncEdges);
+  }, [syncEdges]);
 
-  // Arrow keys steer the carousel only while it's the thing being looked at —
-  // a page-wide listener would hijack arrow scrolling everywhere else.
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (!section.contains(document.activeElement)) return;
-      if (e.key === 'ArrowLeft') prev();
-      if (e.key === 'ArrowRight') next();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [prev, next]);
-
-  const testimonial = TESTIMONIALS[index];
-
-  const variants = {
-    enter: (d: number) => ({ opacity: 0, x: d * 40 }),
-    center: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-    },
-    exit: (d: number) => ({ opacity: 0, x: d * -40, transition: { duration: 0.3 } }),
+  // Step by one card so the rail always lands on a card edge rather than
+  // stopping halfway through a quote.
+  const scrollByCard = (dir: 1 | -1) => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const card = rail.querySelector('article');
+    const gap = 24;
+    const step = card ? card.getBoundingClientRect().width + gap : rail.clientWidth * 0.8;
+    rail.scrollBy({ left: dir * step, behavior: 'smooth' });
   };
 
+  // Alternating tilt, cycled so neighbouring cards never share an angle.
+  const tilts = ['-rotate-1', 'rotate-1', '-rotate-2', 'rotate-2'];
+
   return (
-    <section
-      ref={sectionRef}
-      className="pb-32 px-6 md:px-12"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-      aria-roledescription="carousel"
-      aria-label="Speaking feedback"
-    >
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <p className={`${TAG} mb-4`}>{TESTIMONIAL_CONTEXT.eyebrow}</p>
-          <h3 className="text-3xl md:text-5xl font-black font-display tracking-tighter uppercase leading-none">
-            {TESTIMONIAL_CONTEXT.headline}
+    <section className="px-6 md:px-12 pb-32" aria-label="Speaking feedback">
+      <div className="relative w-full max-w-7xl mx-auto rounded-3xl brutal-border bg-white/[0.03] p-6 sm:p-8 shadow-2xl">
+        {/* Stacks below sm — side by side, the copy overflows the panel on phones */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 items-start sm:items-center px-1 sm:px-0">
+          <h3 className="text-[40px] sm:text-6xl lg:text-7xl leading-[0.9] font-black font-display uppercase tracking-tighter">
+            Testimonials.
           </h3>
+          <span aria-hidden="true" role="separator" aria-orientation="vertical" className="hidden sm:block w-px bg-[#2563EB]/30 h-10 shrink-0" />
+          <p className="text-sm sm:text-base opacity-50 leading-snug sm:mt-1 max-w-xs">
+            {TESTIMONIAL_CONTEXT.eyebrow} from a training delivered to a {TESTIMONIAL_CONTEXT.audience}.
+          </p>
         </div>
 
-        <div className="relative">
+        <div className="h-px bg-[#2563EB]/25 mt-4" />
+
+        <div className="relative overflow-hidden rounded-3xl mt-6 min-h-[360px]">
+          {/* Edge fades — tinted to the panel, not the page, so they blend */}
+          <div aria-hidden="true" className={`pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-24 z-10 bg-gradient-to-r from-[#0c0c0c] to-transparent transition-opacity duration-300 ${atStart ? 'opacity-0' : 'opacity-100'}`} />
+          <div aria-hidden="true" className={`pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-24 z-10 bg-gradient-to-l from-[#0c0c0c] to-transparent transition-opacity duration-300 ${atEnd ? 'opacity-0' : 'opacity-100'}`} />
+
           <div
-            className="relative rounded-2xl brutal-border bg-white/[0.03] px-7 md:px-14 py-12 min-h-[300px] flex items-center overflow-hidden"
-            aria-live="polite"
-            aria-atomic="true"
+            ref={railRef}
+            onScroll={syncEdges}
+            tabIndex={0}
+            className="hide-scrollbar flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory items-stretch px-2 sm:px-6 py-6 focus:outline-none"
           >
-            <span
-              className="absolute top-4 left-6 md:left-10 text-8xl leading-none select-none pointer-events-none accent-text opacity-15 font-display"
-              aria-hidden="true"
-            >
-              &ldquo;
-            </span>
-
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={index}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="flex flex-col gap-8 w-full relative"
+            {TESTIMONIALS.map((item, i) => (
+              <article
+                key={item.name}
+                // max-w capped to the viewport below sm so a whole quote is
+                // readable without the card running off screen
+                className={`snap-center shrink-0 min-w-[260px] sm:min-w-[480px] max-w-[82vw] sm:max-w-[620px] rounded-[24px] border border-[#2563EB]/30 bg-[#080808] p-6 sm:p-8 shadow-2xl transition-transform duration-300 hover:-translate-y-1 hover:rotate-0 ${tilts[i % tilts.length]}`}
               >
-                <blockquote>
-                  <p className="text-lg md:text-xl leading-relaxed opacity-90">{testimonial.quote}</p>
-                </blockquote>
-
-                <div className="flex items-center gap-4">
-                  <div className="h-px flex-1 bg-white/10" />
-                  <div className="text-right">
-                    <p className="text-sm font-bold leading-tight">{testimonial.name}</p>
-                    <p className="text-[11px] opacity-40 leading-tight mt-0.5">
-                      {testimonial.role} — {TESTIMONIAL_CONTEXT.source}
-                    </p>
+                <p className="text-base sm:text-lg md:text-xl leading-relaxed opacity-90">
+                  &ldquo;{item.quote}&rdquo;
+                </p>
+                <div className="mt-8 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#2563EB]/15 border border-[#2563EB]/30 flex items-center justify-center shrink-0">
+                    <span className="text-[11px] font-black font-display tracking-tighter accent-text">
+                      {item.name.split(/[\s-]/).map(w => w[0]).join('').slice(0, 2)}
+                    </span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold leading-tight">{item.name}</div>
+                    <div className="text-xs opacity-40 leading-tight">
+                      {item.role} — {TESTIMONIAL_CONTEXT.source}
+                    </div>
                   </div>
                 </div>
-              </motion.div>
-            </AnimatePresence>
+              </article>
+            ))}
           </div>
 
-          <button
-            onClick={prev}
-            aria-label="Previous testimonial"
-            className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5 w-10 h-10 rounded-full items-center justify-center brutal-border bg-[#080808] opacity-50 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200 cursor-pointer"
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <button
-            onClick={next}
-            aria-label="Next testimonial"
-            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-5 w-10 h-10 rounded-full items-center justify-center brutal-border bg-[#080808] opacity-50 hover:opacity-100 hover:text-[#2563EB] transition-all duration-200 cursor-pointer"
-          >
-            <ChevronRight size={18} />
-          </button>
-        </div>
-
-        <div className="flex items-center justify-center gap-2 mt-8" role="tablist" aria-label="Select testimonial">
-          {TESTIMONIALS.map((item, i) => (
+          <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 z-20 flex items-center gap-3">
             <button
-              key={item.name}
-              role="tab"
-              aria-selected={i === index}
-              aria-label={`Testimonial from ${item.name}`}
-              onClick={() => go(i, i > index ? 1 : -1)}
-              className="relative h-1 rounded-full overflow-hidden bg-white/15 transition-all duration-300 cursor-pointer"
-              style={{ width: i === index ? 48 : 12 }}
+              type="button"
+              aria-label="Previous testimonial"
+              onClick={() => scrollByCard(-1)}
+              disabled={atStart}
+              className="w-10 h-10 rounded-full inline-flex items-center justify-center border border-[#2563EB]/40 bg-[#080808]/80 backdrop-blur-sm hover:bg-[#2563EB]/25 transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
-              {i === index && (
-                <div
-                  key={`progress-${index}`}
-                  className="absolute inset-y-0 left-0 rounded-full bg-[#2563EB]"
-                  style={{
-                    animation: `brag-progress ${INTERVAL_MS}ms linear forwards`,
-                    animationPlayState: paused ? 'paused' : 'running',
-                  }}
-                />
-              )}
+              <ChevronLeft size={18} />
             </button>
-          ))}
+            <button
+              type="button"
+              aria-label="Next testimonial"
+              onClick={() => scrollByCard(1)}
+              disabled={atEnd}
+              className="w-10 h-10 rounded-full inline-flex items-center justify-center bg-[#2563EB] text-white hover:bg-white hover:text-[#080808] transition-colors duration-200 cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
         </div>
-
-        <p className="text-center font-mono text-[10px] opacity-30 mt-8 leading-relaxed">
-          From a training delivered to a {TESTIMONIAL_CONTEXT.audience}.
-        </p>
       </div>
     </section>
   );
