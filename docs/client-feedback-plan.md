@@ -126,18 +126,33 @@ with the case studies."*
 This is the largest piece of work and the one most dependent on content.
 
 **Changes**
-1. `src/data/caseStudies.ts` — typed data module:
+1. `src/data/caseStudies.ts` — typed data module. Field list taken from the actual MarketerHire board
+   (18 cards, each two columns — narrative left, tag groups right):
    ```ts
    interface CaseStudy {
-     slug: string; client: string; logo: string; heroImage: string;
-     background: string;          // client context
-     engagement: string;          // what he did
-     highlights: string[];        // metric bullets
-     skills: string[]; tools: string[]; platforms: string[];
-     demographics: string; pricePoint: string;
+     slug: string;
+     client: string;
+     discipline: string;            // e.g. "Growth Marketing", "Demand Generation"
+     narrative: string;             // the engagement write-up
+     responsibilities: string[];    // the bulleted list
+     highlights: string;            // the Highlights block
+     skills: string[];
+     tools: string[];
+     platforms: string[];
+     audience: string[];
+     companyStage: string[];
+     industries: string[];
+     productPricePoint: string[];
+     salesIndustriesOrProducts: string[];
+     targetBuyerDemographic: string[];
    }
    ```
-   Field list mirrors his MarketerHire case study template exactly.
+   Note `audience` and `targetBuyerDemographic` are distinct groups on the board, as are `industries` and
+   `salesIndustriesOrProducts` — worth keeping separate rather than collapsing.
+
+   **18 cards is a lot for one page.** Recommend leading with 4-6 of the strongest and putting the rest
+   behind a filter (by industry or discipline, both of which the tag groups give us for free) or on the
+   `/work/:slug` detail pages.
 2. `CaseStudiesSection` replacing `FeaturedWorkSection` at position 5. Grid or horizontal-scroll card layout
    rather than the current GSAP pinned deck — the pinned deck shows one card at a time over ~4.5 screens of
    scroll, which doesn't scale past 3 entries.
