@@ -28,7 +28,7 @@ function PhotoCard({ item }: { item: Extract<BragItem, { kind: 'photo' }> }) {
     <div className={`${CARD} group`}>
       <div
         className={`relative overflow-hidden ${
-          item.ratio === 'portrait' ? 'aspect-[3/4]' : 'aspect-[4/3]'
+          item.ratio === 'portrait' ? 'aspect-[3/4]' : item.ratio === 'wide' ? 'aspect-[16/9]' : 'aspect-[4/3]'
         }`}
       >
         <img

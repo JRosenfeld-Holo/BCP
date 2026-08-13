@@ -13,8 +13,9 @@ export type BragItem =
       tag: string;
       image: string;
       alt: string;
-      /** Fixes the card's image box so one tall source can't dominate its column. */
-      ratio: 'landscape' | 'portrait';
+      /** Fixes the card's image box so one tall source can't dominate its
+       *  column. 'wide' (16/9) suits screenshots that must not be side-cropped. */
+      ratio: 'landscape' | 'portrait' | 'wide';
       title: string;
       caption: string;
       meta?: string;
@@ -68,6 +69,19 @@ export const BRAG_ITEMS: BragItem[] = [
     caption:
       'Build Day X Tour — Miami Hackathon, hosted by Tech Equity Collective (a Google initiative) and ACT House.',
     meta: 'December 3, 2023',
+  },
+  {
+    kind: 'photo',
+    id: 'deepinvent',
+    tag: 'Competition',
+    image: '/brag/deepinvent.webp',
+    alt: 'Deepinvent #Deepinvent4Good Inventathon results board showing Brian Cliette in third place',
+    // 16/9 matches the capture: a 4/3 box crops the outer podium cards away
+    ratio: 'wide',
+    title: 'Third Place.',
+    caption:
+      '#Deepinvent4Good Virtual Inventathon — a hybrid dual-functional magnetic-electro filter cartridge with smart sensing, adaptive regeneration and integrated PFAS/microplastic waste management.',
+    meta: 'August 7–21, 2025',
   },
   {
     kind: 'post',
