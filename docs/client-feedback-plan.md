@@ -422,8 +422,8 @@ a dark background.
 
 ## Remaining sequence
 
-1. **Pre-existing issue 1** (form delivery) → verify: a test submission lands in the destination inbox. Do
-   this next — the message tab currently discards everything typed into it.
+1. **Form delivery** ✅ wired — see "Contact form" below. Still needs the two env vars set in Vercel before
+   it can actually deliver.
 2. **Workstream 3** (case studies, below Featured Work) → verify: renders from `caseStudies.ts`,
    `/work/:slug` resolves, `#work` anchor still scrolls correctly. Blocked on the MarketerHire content.
 3. **Workstream 6** (.me one-pager) → separate scope, pending confirmation.
@@ -474,3 +474,35 @@ with Receipts renumbered to 05. Nav deliberately does *not* get its own "Cases" 
 **One deliberate departure from the testimonial carousel: no auto-advance.** Testimonials are one-sentence
 quotes where a 7-second rotation works. A case study is a ~100-word narrative plus nine tag groups; rotating
 it out mid-read would be hostile. Arrows, dots, and scoped keyboard navigation are all identical.
+
+
+---
+
+## Contact form — Resend wiring
+
+`POST /api/contact` ([api/contact.ts](../api/contact.ts)), a Vercel **edge function**. Both forms — the modal
+and the Send a Message tab — post to it.
+
+**The key is server-side only.** This is a client-side Vite SPA, so anything bundled reaches the browser;
+a Resend key in client code would let anyone send mail as this domain. It is never prefixed `VITE_`, never
+imported by `src/`, and never committed — `.gitignore` now covers `.env*` with `!.env.example`.
+
+### Before it can deliver, set in the Vercel dashboard (Settings → Environment Variables)
+
+| Var | Notes |
+|---|---|
+| `RESEND_API_KEY` | from resend.com/api-keys |
+| `CONTACT_TO_EMAIL` | **required** — where enquiries land. Not yet known. |
+| `CONTACT_FROM_EMAIL` | optional; must be a domain verified in Resend. Defaults to `onboarding@resend.dev`, which only delivers to the Resend account owner — fine for testing, not for production. |
+
+Until both required vars are set the endpoint returns 500 and the visitor sees an error. It never shows a
+false "Sent." — that was the specific failure being fixed.
+
+### Handling
+
+Honeypot (`website`) returns 200 without sending, so bots don't retry. Required-field, email-format and
+length checks run before the send. `reply_to` is set to the enquirer so replying from the inbox just works.
+HTML output is escaped.
+
+No rate limiting — edge functions are stateless, so it would need a KV store. Worth adding only if the
+honeypot proves insufficient.

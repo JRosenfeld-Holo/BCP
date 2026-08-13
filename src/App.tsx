@@ -19,19 +19,65 @@ import evidationImg from '../evidation_health.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
-function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [form, setForm] = useState({ name: '', email: '', company: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+type ContactPayload = { name: string; email: string; company: string; message: string; website: string };
 
-  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+const EMPTY_CONTACT: ContactPayload = { name: '', email: '', company: '', message: '', website: '' };
+
+/** Posts to the edge function that holds the Resend key. Throws on failure so
+ *  callers can surface a real error instead of a false "Sent." */
+async function submitContact(payload: ContactPayload): Promise<void> {
+  const response = await fetch('/api/contact', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.error ?? 'Could not send your message. Please try again.');
+  }
+}
+
+/** Off-screen honeypot. Bots fill it, people never see it. */
+function Honeypot({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  return (
+    <div aria-hidden="true" className="absolute left-[-9999px] top-0 w-px h-px overflow-hidden">
+      <label>
+        Website
+        <input
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={value}
+          onChange={e => onChange(e.target.value)}
+        />
+      </label>
+    </div>
+  );
+}
+
+function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [form, setForm] = useState<ContactPayload>(EMPTY_CONTACT);
+  const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Resend wiring goes here
-    setSubmitted(true);
+    setSending(true);
+    setError(null);
+    try {
+      await submitContact(form);
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not send your message.');
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleClose = () => {
     onClose();
-    setTimeout(() => { setForm({ name: '', email: '', company: '', message: '' }); setSubmitted(false); }, 400);
+    setTimeout(() => { setForm(EMPTY_CONTACT); setSubmitted(false); setError(null); }, 400);
   };
 
   const inputClass = "w-full bg-white/5 border border-white/10 rounded-sm px-4 py-3 text-sm placeholder:text-white/25 placeholder:uppercase placeholder:tracking-widest focus:outline-none focus:border-[#2563EB]/60 transition-colors duration-200";
@@ -89,7 +135,8 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
                   <p className="text-sm opacity-60">Brian will be in touch shortly.</p>
                 </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-5 relative">
+                  <Honeypot value={form.website} onChange={v => setForm(f => ({ ...f, website: v }))} />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className={labelClass}>Name *</label>
@@ -138,11 +185,16 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
                     />
                   </div>
 
+                  {error && (
+                    <p role="alert" className="text-xs text-red-400 leading-relaxed">{error}</p>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-3 bg-[#2563EB] text-white font-black uppercase tracking-tighter text-sm py-4 rounded-full hover:bg-white hover:text-[#080808] transition-colors duration-200"
+                    disabled={sending}
+                    className="w-full flex items-center justify-center gap-3 bg-[#2563EB] text-white font-black uppercase tracking-tighter text-sm py-4 rounded-full hover:bg-white hover:text-[#080808] transition-colors duration-200 disabled:opacity-60 disabled:pointer-events-none"
                   >
-                    Send Message <ArrowUpRight size={16} />
+                    {sending ? 'Sending…' : <>Send Message <ArrowUpRight size={16} /></>}
                   </button>
                 </form>
               )}
@@ -840,120 +892,68 @@ function SilkBackground() {
   return <div ref={containerRef} className="absolute inset-0 w-full h-full pointer-events-none" />
 }
 
-const CALENDLY_URL = 'https://calendly.com/brian-cliette/30min?hide_gdpr_banner=1';
-
-// Tall enough to render the picker without an inner scrollbar before Calendly
-// reports its real height; it self-corrects on the first page_height message.
-const CALENDLY_FALLBACK_HEIGHT = 1050;
-
-/**
- * Calendly's widget.js exists to build an iframe carrying `embed_domain` and
- * `embed_type`, and costs ~450ms of main-thread blocking to do it — measured
- * against 10ms with it blocked. Building the same iframe ourselves keeps the
- * scheduler and drops the script, so the booking flow can warm up without
- * stuttering the hero.
- */
-function calendlyEmbedSrc(): string {
-  const url = new URL(CALENDLY_URL);
-  url.searchParams.set('embed_domain', window.location.hostname);
-  url.searchParams.set('embed_type', 'Inline');
-  return url.toString();
-}
+const CALENDLY_URL = 'https://calendly.com/brian-cliette/30min?hide_event_type_details=1&hide_gdpr_banner=1';
 
 function CalendlyEmbed() {
-  const hostRef = useRef<HTMLDivElement>(null);
-  const [src, setSrc] = useState<string | null>(null);
-  const [status, setStatus] = useState<'idle' | 'ready' | 'error'>('idle');
-  const [height, setHeight] = useState(CALENDLY_FALLBACK_HEIGHT);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [loaded, setLoaded] = useState(false);
 
-  // Calendly broadcasts `calendly.page_height` whenever its content resizes
-  // (loading, picking a date, opening the form). Growing the host to match is
-  // what keeps the booking flow from scrolling inside its own iframe.
+  // Lazy-load Calendly's widget.js when the container nears the viewport,
+  // so it stays off the critical path and doesn't stutter the hero.
   useEffect(() => {
-    const onMessage = (e: MessageEvent) => {
-      if (!String(e.origin).includes('calendly.com')) return;
-      const data = e.data as { event?: string; payload?: { height?: string } };
-      if (data?.event !== 'calendly.page_height') return;
-      const px = parseInt(data.payload?.height ?? '', 10);
-      if (Number.isFinite(px) && px > 0) setHeight(px);
-    };
-    window.addEventListener('message', onMessage);
-    return () => window.removeEventListener('message', onMessage);
-  }, []);
-
-  // Booting on scroll meant the visitor watched it load. Instead, boot as soon
-  // as the page goes idle: the scheduler is ready long before anyone reaches
-  // the section, while still staying off the critical path so it can't slow
-  // the hero down.
-  // Attaching at page load put ~500ms of frame setup right where the hero is
-  // animating, which is what the stutter was. Attaching on arrival is the other
-  // extreme — you watch it load. So: arm it roughly two screens out. The hero is
-  // long done, and there's still several seconds of scrolling before it's needed.
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
+    const el = containerRef.current;
+    if (!el) return;
     let cancelled = false;
 
     const observer = new IntersectionObserver(entries => {
       if (!entries[0].isIntersecting) return;
       observer.disconnect();
-      const idle = window.requestIdleCallback;
-      const boot = () => { if (!cancelled) setSrc(calendlyEmbedSrc()); };
-      if (idle) idle(boot, { timeout: 1000 });
-      else boot();
+
+      // Only inject the script once
+      if (cancelled || document.querySelector('script[src*="calendly.com/assets/external/widget.js"]')) {
+        setLoaded(true);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://assets.calendly.com/assets/external/widget.js';
+      script.async = true;
+      document.head.appendChild(script);
     }, { rootMargin: '2000px 0px' });
 
-    observer.observe(host);
+    observer.observe(el);
     return () => { cancelled = true; observer.disconnect(); };
   }, []);
 
-  // If the frame never paints, fall back to opening Calendly directly.
+  // The script loading only means the iframe exists — it paints opaque white
+  // for a moment first. Calendly posts a message once the scheduler is actually
+  // showing, which is the honest signal to drop the placeholder.
   useEffect(() => {
-    if (!src || status !== 'idle') return;
-    const timer = setTimeout(() => setStatus(s => (s === 'idle' ? 'error' : s)), 12000);
-    return () => clearTimeout(timer);
-  }, [src, status]);
-
-  if (status === 'error') {
-    return (
-      <div className="flex flex-col items-center justify-center gap-5 text-center min-h-[300px]">
-        <p className="text-sm text-white/50 max-w-xs">The scheduler didn't load. You can open it directly instead.</p>
-        <a
-          href={CALENDLY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 bg-[#2563EB] text-white font-black uppercase tracking-tighter text-sm px-8 py-4 rounded-full hover:bg-white hover:text-[#080808] transition-colors duration-200"
-        >
-          Open Scheduler <ArrowUpRight size={16} />
-        </a>
-      </div>
-    );
-  }
+    const onMessage = (e: MessageEvent) => {
+      if (String(e.origin).includes('calendly.com')) setLoaded(true);
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
 
   return (
     <div className="relative rounded-xl overflow-hidden bg-white">
-      {status !== 'ready' && (
-        <div className="absolute inset-0 flex items-center justify-center">
+      {/* z-10 + solid fill: the loading iframe paints white over anything
+          beneath it, which left a blank panel instead of this message. */}
+      {!loaded && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white pointer-events-none">
           <span className="text-[10px] uppercase tracking-[0.3em] text-[#080808]/40">Loading calendar…</span>
         </div>
       )}
-      <div ref={hostRef} className="absolute inset-x-0 top-0 h-px pointer-events-none" aria-hidden="true" />
-      {src ? (
-        <iframe
-          src={src}
-          title="Book a call with Brian Cliette"
-          onLoad={() => setStatus('ready')}
-          className="block w-full min-w-[320px] border-0"
-          style={{ height }}
-        />
-      ) : (
-        <div className="min-w-[320px]" style={{ height }} />
-      )}
+      <div
+        ref={containerRef}
+        className="calendly-inline-widget"
+        data-url={CALENDLY_URL}
+        style={{ minWidth: 320, height: 700 }}
+      />
     </div>
   );
 }
-
-type ContactForm = { name: string; email: string; company: string; message: string };
 
 function Field({
   id, label, type = 'text', placeholder, required = false, textarea = false,
@@ -997,16 +997,27 @@ function Field({
 
 function ContactSection() {
   const [tab, setTab] = useState<'call' | 'message'>('call');
-  const [form, setForm] = React.useState<ContactForm>({ name: '', email: '', company: '', message: '' });
+  const [form, setForm] = React.useState<ContactPayload>(EMPTY_CONTACT);
   const [submitted, setSubmitted] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
   const [focused, setFocused] = React.useState<string | null>(null);
 
-  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSending(true);
+    setError(null);
+    try {
+      await submitContact(form);
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not send your message.');
+    } finally {
+      setSending(false);
+    }
   };
 
-  const fieldProps = (id: keyof ContactForm) => ({
+  const fieldProps = (id: 'name' | 'email' | 'company' | 'message') => ({
     id,
     value: form[id],
     isFocused: focused === id,
@@ -1055,9 +1066,12 @@ function ContactSection() {
             tab === 'call' ? 'p-3 md:p-4' : 'p-6 md:p-14'
           }`}
         >
-          {tab === 'call' ? (
+          {/* Hidden rather than unmounted: unmounting threw away the loaded
+              scheduler, so flipping tabs made you sit through the load again. */}
+          <div className={tab === 'call' ? undefined : 'hidden'}>
             <CalendlyEmbed />
-          ) : submitted ? (
+          </div>
+          {tab === 'call' ? null : submitted ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -1071,7 +1085,8 @@ function ContactSection() {
               <p className="text-sm text-white/50 max-w-xs">Brian will review your message and follow up within 24 hours.</p>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="relative">
+              <Honeypot value={form.website} onChange={v => setForm(f => ({ ...f, website: v }))} />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 md:gap-x-16 gap-y-8 md:gap-y-10 mb-8 md:mb-10">
                 <Field {...fieldProps('name')} label="Full Name" placeholder="Your name" required />
                 <Field {...fieldProps('email')} label="Email" type="email" placeholder="you@company.com" required />
@@ -1086,16 +1101,22 @@ function ContactSection() {
               <Field {...fieldProps('message')} label="What are you working on?" placeholder="What's broken, what you need built, and when it needs to work." required textarea />
 
               <div className="mt-8 md:mt-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                <p className="text-[10px] uppercase tracking-widest text-white/20">
-                  No pitch decks. No NDAs upfront.
-                </p>
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest text-white/20">
+                    No pitch decks. No NDAs upfront.
+                  </p>
+                  {error && (
+                    <p role="alert" className="text-xs text-red-400 mt-2 leading-relaxed max-w-xs">{error}</p>
+                  )}
+                </div>
                 <motion.button
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   type="submit"
-                  className="group flex items-center gap-4 bg-[#2563EB] text-white font-black uppercase tracking-tighter text-sm px-8 py-4 rounded-full hover:bg-white hover:text-[#080808] transition-colors duration-200 cursor-pointer"
+                  disabled={sending}
+                  className="group flex items-center gap-4 bg-[#2563EB] text-white font-black uppercase tracking-tighter text-sm px-8 py-4 rounded-full hover:bg-white hover:text-[#080808] transition-colors duration-200 cursor-pointer disabled:opacity-60 disabled:pointer-events-none"
                 >
-                  Send Message
+                  {sending ? 'Sending…' : 'Send Message'}
                   <span className="w-8 h-8 rounded-full border border-white/30 group-hover:border-[#080808]/30 flex items-center justify-center transition-colors duration-200">
                     <ArrowUpRight size={14} />
                   </span>
