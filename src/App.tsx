@@ -13,6 +13,8 @@ import { MinimalistHero } from '@/components/ui/minimalist-hero';
 import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
 import { BragWall, TestimonialCarousel } from './BragSection';
 import { CaseStudySection } from './CaseStudySection';
+import { useMeta } from './seo';
+import { NotFound } from './NotFound';
 import athleticGreensImg from '../athletic greens .webp';
 import twilioImg from '../twilio_fin.webp';
 import evidationImg from '../evidation_health.webp';
@@ -207,6 +209,13 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
 }
 
 function HomePage() {
+  useMeta({
+    title: 'Brian Cliette — Agentic Engineering & AI GTM Consultant',
+    description:
+      'Brian Cliette builds agent infrastructure and AI-first go-to-market systems — prospecting, signal workflows and RevOps automation. Past work includes Twilio, AG1, Pixlee and Evidation Health.',
+    path: '/',
+  });
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [contactOpen, setContactOpen] = useState(false);
   const openContact = () => setContactOpen(true);
@@ -252,6 +261,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/services/:slug" element={<ServicePageRoute />} />
+        {/* The host rewrites unknown paths to index.html so deep links work.
+            Without this catch-all they'd render a blank page instead. */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { NotFound } from '../NotFound'
+import { useMeta } from '../seo'
 import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
@@ -27,6 +29,14 @@ interface ServiceData {
 }
 
 function ServicePageTemplate({ data }: { data: ServiceData }) {
+  // Title uses the headline with its layout line breaks flattened; description
+  // is the page's own subhead, trimmed to a sensible SERP length.
+  useMeta({
+    title: `${data.headline.replace(/\n/g, ' ').replace(/\.$/, '')} — Brian Cliette`,
+    description: data.subhead.length > 155 ? `${data.subhead.slice(0, 152).trimEnd()}…` : data.subhead,
+    path: `/services/${data.slug}`,
+  })
+
   return (
     <div className="min-h-screen bg-navy-900 font-sans text-white overflow-x-hidden">
 
@@ -309,6 +319,6 @@ export const servicePages: Record<string, ServiceData> = {
 
 export function ServicePage({ slug }: { slug: string }) {
   const data = servicePages[slug]
-  if (!data) return null
+  if (!data) return <NotFound />
   return <ServicePageTemplate data={data} />
 }
