@@ -276,6 +276,16 @@ reference:
 Verified in Chromium: all four images decode, masonry resolves 3/2/1 columns at 1440/900/500 with no
 horizontal overflow, arrows and dots both drive the carousel, and auto-advance fires when unhovered.
 
+**Testimonials now carry LinkedIn recommendations** from Brian's own data export
+(`Recommendations_Received.csv`) — 14 of the 35, chosen for the weight the name carries: two Penn State
+accelerator directors, U-Lace's founder (a client with his own case study), a Pixlee colleague, plus
+Blue Cross Blue Shield, Dave & Buster's, BI WORLDWIDE and University of Leeds. The 5 workshop quotes stay
+as depth behind them.
+
+Long recommendations are trimmed to their strongest passage with an ellipsis; wording is otherwise the
+original apart from obvious typos. `source` moved from the shared context onto each testimonial — a VP
+recommending Brian can't be captioned as a publishing-community attendee.
+
 **Still open:** no source URLs were supplied, so cards render without "View post" links by design rather
 than pointing anywhere invented — `href` on any item lights the link up. Testimonials now carry full names
 at Brian's direction; delete an entry from `TESTIMONIALS` if anyone asks to be removed.

@@ -253,7 +253,7 @@ export function TestimonialCarousel() {
           </h3>
           <span aria-hidden="true" role="separator" aria-orientation="vertical" className="hidden sm:block w-px bg-[#2563EB]/30 h-10 shrink-0" />
           <p className="text-sm sm:text-base opacity-50 leading-snug sm:mt-1 max-w-xs">
-            {TESTIMONIAL_CONTEXT.eyebrow} from a training delivered to a {TESTIMONIAL_CONTEXT.audience}.
+            {TESTIMONIAL_CONTEXT.blurb}
           </p>
         </div>
 
@@ -286,11 +286,12 @@ export function TestimonialCarousel() {
                       {item.name.split(/[\s-]/).map(w => w[0]).join('').slice(0, 2)}
                     </span>
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <div className="text-sm font-bold leading-tight">{item.name}</div>
                     <div className="text-xs opacity-40 leading-tight">
-                      {item.role} — {TESTIMONIAL_CONTEXT.source}
+                      {item.role}
                     </div>
+                    <div className="text-xs opacity-60 leading-tight mt-0.5">{item.company}</div>
                   </div>
                 </div>
               </article>
