@@ -244,7 +244,7 @@ export function TestimonialCarousel() {
   const tilts = ['-rotate-1', 'rotate-1', '-rotate-2', 'rotate-2'];
 
   return (
-    <section className="px-6 md:px-12 pb-32" aria-label="Speaking feedback">
+    <section className="px-6 md:px-12 pb-32" aria-label="Testimonials">
       <div className="relative w-full max-w-7xl mx-auto rounded-3xl brutal-border bg-white/[0.03] p-6 sm:p-8 shadow-2xl">
         {/* Stacks below sm — side by side, the copy overflows the panel on phones */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 items-start sm:items-center px-1 sm:px-0">
