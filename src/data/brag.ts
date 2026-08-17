@@ -34,18 +34,6 @@ export type BragItem =
       duration: string;
       href?: string;
     }
-  | {
-      kind: 'course';
-      id: string;
-      tag: string;
-      title: string;
-      platform: string;
-      kicker: string;
-      role: string;
-      cohosts: { name: string; role: string }[];
-      href?: string;
-    };
-
 export const BRAG_ITEMS: BragItem[] = [
   {
     kind: 'photo',
@@ -98,17 +86,29 @@ export const BRAG_ITEMS: BragItem[] = [
     meta: 'November 2023',
   },
   {
-    kind: 'course',
+    kind: 'photo',
     id: 'maven',
     tag: 'Teaching',
-    platform: 'Maven',
-    kicker: 'Lightning Lab w/ AI Build Lab Community Leaders',
-    title: 'Layoffs to 7-Fig AI Service Business',
-    role: 'Founder, GTM Engineer',
-    cohosts: [
-      { name: 'Sara Davison', role: 'Founder, Agentic AI Growth Practitioner' },
-      { name: 'Tyler Fisk', role: 'Founder, Agentic AI Growth Practitioner' },
-    ],
+    image: '/brag/maven.webp',
+    alt: 'Maven course card for “Layoffs to 7 Fig AI Service Business”, featuring Brian Cliette, Sara Davison and Tyler Fisk',
+    ratio: 'wide',
+    fit: 'contain',
+    title: 'Maven Instructor.',
+    caption:
+      '“Layoffs to 7 Fig AI Service Business: How To Win In The New AI Economy” — a Lightning Lab with AI Build Lab community leaders.',
+    meta: 'Brian Cliette · Founder, GTM Engineer',
+  },
+  {
+    kind: 'photo',
+    id: 'udemy',
+    tag: 'Teaching',
+    image: '/brag/udemy.webp',
+    alt: 'Udemy instructor profile for Brian Cliette showing 59,872 total learners and 1,952 reviews',
+    ratio: 'wide',
+    fit: 'contain',
+    title: '59,872 Learners.',
+    caption: '30+ courses on Udemy, rated across 1,952 reviews.',
+    meta: 'Udemy instructor profile',
   },
   {
     kind: 'video',

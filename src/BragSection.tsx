@@ -105,48 +105,10 @@ function VideoCard({ item }: { item: Extract<BragItem, { kind: 'video' }> }) {
   );
 }
 
-function CourseCard({ item }: { item: Extract<BragItem, { kind: 'course' }> }) {
-  return (
-    <div className={`${CARD} p-5`}>
-      <div className="flex items-center justify-between mb-5">
-        <span className="text-sm font-black font-display tracking-tighter uppercase">{item.platform}</span>
-        <span className={TAG}>{item.tag}</span>
-      </div>
-
-      <p className="text-[10px] uppercase tracking-[0.2em] opacity-40 mb-3">{item.kicker}</p>
-      <h4 className={`${TITLE} text-2xl mb-5`}>{item.title}</h4>
-
-      <div className="space-y-3 pt-4 border-t border-white/5">
-        <div className="flex items-baseline gap-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] shrink-0 translate-y-[-2px]" />
-          <div>
-            <div className="text-sm font-bold leading-tight">Brian Cliette</div>
-            <div className="text-[11px] opacity-40 leading-tight">{item.role}</div>
-          </div>
-        </div>
-        {item.cohosts.map(host => (
-          <div key={host.name} className="flex items-baseline gap-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-white/20 shrink-0 translate-y-[-2px]" />
-            <div>
-              <div className="text-sm opacity-60 leading-tight">{host.name}</div>
-              <div className="text-[11px] opacity-30 leading-tight">{host.role}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-4">
-        <SourceLink href={item.href} label="View course" />
-      </div>
-    </div>
-  );
-}
-
 function BragCard({ item }: { item: BragItem }) {
   switch (item.kind) {
     case 'photo': return <PhotoCard item={item} />;
     case 'video': return <VideoCard item={item} />;
-    case 'course': return <CourseCard item={item} />;
   }
 }
 

@@ -231,15 +231,15 @@ function HomePage() {
       <ScrollProgress />
       <Navbar />
       <HeroSection />
+      <LogoMarquee />
       <AboutSection />
       <BragWall />
       <ServicesSection />
       <CaseStudySection />
       <TestimonialCarousel />
-      {/* Logos and the featured deck sit at the bottom deliberately: proof of
-          work leads, brand recognition closes. */}
+      {/* The featured deck closes the page: proof of work leads, brand
+          recognition closes. The logo strip stays under the hero. */}
       <FeaturedWorkSection />
-      <LogoMarquee />
       <Suspense fallback={<div className="h-screen border-t border-white/5" />}>
         <FunnelSection />
       </Suspense>
@@ -453,7 +453,7 @@ function AboutSection() {
   const stats = [
     { value: '800K–1M', label: 'Organic Leads / Month' },
     { value: '$60M+', label: 'Ad Budget Managed' },
-    { value: '55K+', label: 'Udemy Students' },
+    { value: '59.8K', label: 'Udemy Learners' },
     { value: '5M+', label: 'Book Downloads' },
   ];
 
@@ -638,9 +638,7 @@ function LogoMarquee() {
   ];
 
   return (
-    // relative z-10: the marquee now follows the pinned Featured Work deck,
-    // whose decorative layer overhangs whatever comes after it.
-    <div className="relative z-10 py-10 border-y border-white/5 overflow-hidden">
+    <div className="py-10 border-y border-white/5 overflow-hidden">
       <p className="text-xs md:text-sm uppercase tracking-[0.3em] text-white text-center mb-8">Brands &amp; Teams I've Worked With</p>
       <div className="animate-marquee-logos flex items-center whitespace-nowrap w-max">
         {[...logos, ...logos].map((logo, i) => (
@@ -910,36 +908,25 @@ function SilkBackground() {
 
 const CALENDLY_URL = 'https://calendly.com/brian-cliette/30min?hide_event_type_details=1&hide_gdpr_banner=1';
 
-function CalendlyEmbed() {
+/**
+ * Injects Calendly's widget.js once. `warm` is driven by a sentinel that lives
+ * outside the tab panels — this component is inside the inactive panel by
+ * default, and a display:none element never fires an IntersectionObserver, so
+ * observing from in here would mean the scheduler only started loading once
+ * someone clicked the tab.
+ */
+function CalendlyEmbed({ warm }: { warm: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
 
-  // Lazy-load Calendly's widget.js when the container nears the viewport,
-  // so it stays off the critical path and doesn't stutter the hero.
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    let cancelled = false;
-
-    const observer = new IntersectionObserver(entries => {
-      if (!entries[0].isIntersecting) return;
-      observer.disconnect();
-
-      // Only inject the script once
-      if (cancelled || document.querySelector('script[src*="calendly.com/assets/external/widget.js"]')) {
-        setLoaded(true);
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = 'https://assets.calendly.com/assets/external/widget.js';
-      script.async = true;
-      document.head.appendChild(script);
-    }, { rootMargin: '2000px 0px' });
-
-    observer.observe(el);
-    return () => { cancelled = true; observer.disconnect(); };
-  }, []);
+    if (!warm) return;
+    if (document.querySelector('script[src*="calendly.com/assets/external/widget.js"]')) return;
+    const script = document.createElement('script');
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    script.async = true;
+    document.head.appendChild(script);
+  }, [warm]);
 
   // The script loading only means the iframe exists — it paints opaque white
   // for a moment first. Calendly posts a message once the scheduler is actually
@@ -1012,7 +999,22 @@ function Field({
 }
 
 function ContactSection() {
-  const [tab, setTab] = useState<'call' | 'message'>('call');
+  const [tab, setTab] = useState<'call' | 'message'>('message');
+  const warmRef = useRef<HTMLDivElement>(null);
+  const [warmBooking, setWarmBooking] = useState(false);
+
+  // Start the scheduler roughly two screens out, whichever tab is showing.
+  useEffect(() => {
+    const el = warmRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+      setWarmBooking(true);
+    }, { rootMargin: '2000px 0px' });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   const [form, setForm] = React.useState<ContactPayload>(EMPTY_CONTACT);
   const [submitted, setSubmitted] = React.useState(false);
   const [sending, setSending] = React.useState(false);
@@ -1043,14 +1045,15 @@ function ContactSection() {
   });
 
   const tabs = [
-    { key: 'call' as const, label: 'Book a Call' },
     { key: 'message' as const, label: 'Send a Message' },
+    { key: 'call' as const, label: 'Book a Call' },
   ];
 
   return (
     // relative z-10: the pinned Featured Work layer overhangs this section — stack above it.
     // scroll-mt clears the fixed navbar so anchor jumps don't land the tabs underneath it.
     <section id="contact-form" className="relative z-10 scroll-mt-28 pt-10 pb-32 px-6 md:px-16">
+      <div ref={warmRef} aria-hidden="true" className="absolute inset-x-0 top-0 h-px pointer-events-none" />
       <div className="max-w-5xl mx-auto">
 
         {/* Path selector */}
@@ -1085,7 +1088,7 @@ function ContactSection() {
           {/* Hidden rather than unmounted: unmounting threw away the loaded
               scheduler, so flipping tabs made you sit through the load again. */}
           <div className={tab === 'call' ? undefined : 'hidden'}>
-            <CalendlyEmbed />
+            <CalendlyEmbed warm={warmBooking} />
           </div>
           {tab === 'call' ? null : submitted ? (
             <motion.div
