@@ -13,25 +13,14 @@ export type BragItem =
       tag: string;
       image: string;
       alt: string;
-      /** Fixes the card's image box so one tall source can't dominate its
-       *  column. 'wide' (16/9) suits screenshots that must not be side-cropped. */
-      ratio: 'landscape' | 'portrait' | 'wide';
+      /** Fixes the card's image box so one tall source can't dominate its column. */
+      ratio: 'landscape' | 'portrait' | 'wide' | 'tall';
+      /** Photos crop happily; screenshots must not — every pixel is content, so
+       *  they letterbox with 'contain' instead of losing their edges. */
+      fit?: 'cover' | 'contain';
       title: string;
       caption: string;
       meta?: string;
-      href?: string;
-    }
-  | {
-      kind: 'post';
-      id: string;
-      tag: string;
-      platform: 'x' | 'instagram';
-      author: string;
-      handle: string;
-      date: string;
-      text: string;
-      note: string;
-      stats: { label: string; value: string }[];
       href?: string;
     }
   | {
@@ -63,8 +52,8 @@ export const BRAG_ITEMS: BragItem[] = [
     id: 'miami-check',
     tag: 'Hackathon',
     image: '/brag/check.webp',
-    alt: 'Brian Cliette holding the $10,000 Build Day X Miami Hackathon winner cheque',
-    ratio: 'landscape',
+    alt: 'Brian Cliette holding the $10,000 Build Day X Miami Hackathon winner cheque in front of the Tech Equity Collective and ACT House backdrop',
+    ratio: 'portrait',
     title: '$10,000. First Place.',
     caption:
       'Build Day X Tour — Miami Hackathon, hosted by Tech Equity Collective (a Google initiative) and ACT House.',
@@ -76,28 +65,26 @@ export const BRAG_ITEMS: BragItem[] = [
     tag: 'Competition',
     image: '/brag/deepinvent.webp',
     alt: 'Deepinvent #Deepinvent4Good Inventathon results board showing Brian Cliette in third place',
-    // 16/9 matches the capture: a 4/3 box crops the outer podium cards away
+    // 16/9 matches the capture; contain guarantees no podium card is clipped
     ratio: 'wide',
+    fit: 'contain',
     title: 'Finalist.',
     caption:
       '#Deepinvent4Good Virtual Inventathon — a hybrid dual-functional magnetic-electro filter cartridge with smart sensing, adaptive regeneration and integrated PFAS/microplastic waste management.',
     meta: 'August 7–21, 2025',
   },
   {
-    kind: 'post',
+    kind: 'photo',
     id: 'agi-house',
     tag: 'Hackathon',
-    platform: 'x',
-    author: 'Alex Reibman',
-    handle: '@AlexReibman',
-    date: 'Oct 23, 2023',
-    text: "SF's top AI hackers all came to a mansion to push the creative limits of art and music. These projects are next level. Tweeting my top picks from the Dreamscape Creativity Hackathon at @agihouse_org w/ @mantisVC @coatuemgmt",
-    note: 'Coverage of the Dreamscape Creativity Hackathon at AGI House, San Francisco — where Brian competed.',
-    stats: [
-      { label: 'Views', value: '211.4K' },
-      { label: 'Likes', value: '526' },
-      { label: 'Reposts', value: '68' },
-    ],
+    image: '/brag/tweet-agihouse.webp',
+    alt: 'Post by Alex Reibman on X covering the Dreamscape Creativity Hackathon at AGI House, with an arrow marking Brian Cliette in the room',
+    ratio: 'tall',
+    fit: 'contain',
+    title: '211.4K Views.',
+    caption:
+      'Coverage of the Dreamscape Creativity Hackathon at AGI House, San Francisco — with @mantisVC and Coatue. Brian competed.',
+    meta: 'Alex Reibman · Oct 23, 2023 · 526 likes · 68 reposts',
   },
   {
     kind: 'photo',
@@ -132,18 +119,6 @@ export const BRAG_ITEMS: BragItem[] = [
     title: 'Strengthening Society: How Entrepreneurship Benefits Our World',
     channel: 'Penn State Startup Week — Invent Penn State',
     duration: '1:00:50',
-  },
-  {
-    kind: 'photo',
-    id: 'team-caviar',
-    tag: 'Hackathon',
-    image: '/brag/team-win.webp',
-    alt: 'The winning Caviar team holding the $10,000 cheque',
-    ratio: 'landscape',
-    title: 'Team Caviar.',
-    caption:
-      '"1st Place Winner of $10,000: Caviar, a software platform enabling restaurant operators through automation and predictive AI." — ACT House',
-    meta: 'Juan Zamudio · Whitney Sherrill · Brian Cliette · Hunter Christerpher',
   },
 ];
 

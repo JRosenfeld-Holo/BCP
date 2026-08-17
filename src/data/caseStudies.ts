@@ -1,6 +1,8 @@
 // Transcribed from the MarketerHire work-experience board
-// (`Brian Cliette Case Studies.pdf`). Every figure, tag and date here comes
-// from that export — don't add a number that isn't on it.
+// (`Brian Cliette Case Studies.pdf`). Every figure, tag and date comes from that
+// export, except where Brian has since corrected it — the Twilio entry carries
+// his $21M team allocation and the specific channels he ran, which the board
+// stated less precisely. Don't add a number from any other source.
 //
 // Ordered by brand recognition rather than date: the marquee names carry the
 // section, the rest add depth.
@@ -31,14 +33,14 @@ export const CASE_STUDIES: CaseStudy[] = [
     slug: 'twilio',
     client: 'Twilio',
     role: 'Senior Demand Generation Manager',
-    highlight: "Boosted Twilio's MQLs by 27%, conversions by 93% (2FA Funnel), and ROAS by 32%.",
+    highlight: "Owned a $21M team allocation of Twilio's $60M global paid budget — lifting MQLs 27%, 2FA funnel conversions 93% and ROAS 32%.",
     narrative:
-      'Led a multi-channel acquisition strategy at Twilio, managing a $12M budget and working with cross-functional teams to boost Marketing Qualified Leads (MQLs) by 27% and conversions by 93%. Focused on optimization including successful ad and landing page testing, utilizing A/B testing on developer-focused channels which resulted in a 32% increase in Return on Ad Spend (ROAS). Additionally, co-managed a substantial $36M North American and $60M global paid ads budget, overseeing a team of 12 marketers. Developed and fine-tuned growth programs using the marketing automation tool Segment, achieving greater efficiency and improved ROI. Achieved a 16% increase in Sales Accepted Leads (SAL) and a 12% growth in User Value Expansion (UVECO), and reduced Customer Acquisition Cost (CAC) by 11%.',
+      "Led a multi-channel acquisition strategy at Twilio. Brian's team allocation was $21M of the company's $60M global paid budget, and he personally managed the developer-focused channels — Quora, Stack Overflow and Reddit — alongside Google AdWords and Facebook. Working with cross-functional teams, he lifted Marketing Qualified Leads 27% and conversions 93%. A/B testing across ad and landing page variants on those developer channels produced a 32% increase in Return on Ad Spend. He oversaw a team of 12 marketers, developed growth programs on Segment, and achieved a 16% increase in Sales Accepted Leads and 12% growth in User Value Expansion while reducing Customer Acquisition Cost 11%.",
     engagement: 'Full-time',
     period: 'Mar 2022 – Jun 2023',
     location: 'San Francisco (Remote)',
     skills: ['CRO', 'CRO – Marketing channel', 'CRO – Website', 'Cross / Omni Channel Strategy', 'Cross-channel strategy', 'Facebook ad content', 'Lead generation', 'Native advertising & networks', 'Scaling ad spend'],
-    tools: ['Meta App Campaigns', 'A/B testing tools (Optimizely, VWO, etc)', 'Landing page tools (Instapage, Unbounce, etc)', 'Quora', 'Reddit'],
+    tools: ['Google AdWords', 'Facebook', 'Quora', 'Stack Overflow', 'Reddit', 'Meta App Campaigns', 'A/B testing tools (Optimizely, VWO, etc)', 'Landing page tools (Instapage, Unbounce, etc)', 'Segment'],
     platforms: ['Web'],
     audiences: ['Businesses (B2B)'],
     companyStage: ['Expansion & Growth'],

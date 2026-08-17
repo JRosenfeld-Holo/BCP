@@ -231,13 +231,15 @@ function HomePage() {
       <ScrollProgress />
       <Navbar />
       <HeroSection />
-      <LogoMarquee />
       <AboutSection />
-      <ServicesSection />
-      <FeaturedWorkSection />
-      <CaseStudySection />
       <BragWall />
+      <ServicesSection />
+      <CaseStudySection />
       <TestimonialCarousel />
+      {/* Logos and the featured deck sit at the bottom deliberately: proof of
+          work leads, brand recognition closes. */}
+      <FeaturedWorkSection />
+      <LogoMarquee />
       <Suspense fallback={<div className="h-screen border-t border-white/5" />}>
         <FunnelSection />
       </Suspense>
@@ -484,7 +486,7 @@ function AboutSection() {
               I've been building on the internet since Friendster. The path since then has been deliberate: investment banking, a decade teaching at Penn State, then growth operations. That combination closes a gap that trips up most consultants. Strategy doesn't get lost between the executive and the engineer when the same person can speak to both.
             </p>
             <p className="text-sm opacity-70 leading-relaxed">
-              The proof is in the last ten years: Twilio's $60M global paid program, AG1's climb to a $2B brand, Pixlee from early traction to category leader (a16z-backed), and U-Lace with Mark Cuban on Shark Tank. Every engagement had a different market and a different growth lever, but the same mandate: build a system that generates revenue after I'm gone.
+              The proof is in the last ten years: a $21M slice of Twilio's $60M global paid program, AG1's climb to a $2B brand, Pixlee from early traction to category leader (a16z-backed), and U-Lace with Mark Cuban on Shark Tank. Every engagement had a different market and a different growth lever, but the same mandate: build a system that generates revenue after I'm gone.
             </p>
           </div>
 
@@ -636,7 +638,9 @@ function LogoMarquee() {
   ];
 
   return (
-    <div className="py-10 border-y border-white/5 overflow-hidden">
+    // relative z-10: the marquee now follows the pinned Featured Work deck,
+    // whose decorative layer overhangs whatever comes after it.
+    <div className="relative z-10 py-10 border-y border-white/5 overflow-hidden">
       <p className="text-xs md:text-sm uppercase tracking-[0.3em] text-white text-center mb-8">Brands &amp; Teams I've Worked With</p>
       <div className="animate-marquee-logos flex items-center whitespace-nowrap w-max">
         {[...logos, ...logos].map((logo, i) => (

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'motion/react';
 import { ArrowUpRight, Play, ChevronLeft, ChevronRight } from 'lucide-react';
-import { FaXTwitter, FaInstagram } from 'react-icons/fa6';
 import { BRAG_ITEMS, TESTIMONIALS, TESTIMONIAL_CONTEXT, type BragItem } from './data/brag';
 
 const CARD = 'brutal-border rounded-xl bg-white/[0.03] overflow-hidden';
@@ -28,21 +27,37 @@ function PhotoCard({ item }: { item: Extract<BragItem, { kind: 'photo' }> }) {
     <div className={`${CARD} group`}>
       <div
         className={`relative overflow-hidden ${
-          item.ratio === 'portrait' ? 'aspect-[3/4]' : item.ratio === 'wide' ? 'aspect-[16/9]' : 'aspect-[4/3]'
+          {
+            portrait: 'aspect-[3/4]',
+            tall: 'aspect-[4/5]',
+            wide: 'aspect-[16/9]',
+            landscape: 'aspect-[4/3]',
+          }[item.ratio]
         }`}
       >
         <img
           src={item.image}
           alt={item.alt}
           loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          className={`w-full h-full transition-transform duration-700 group-hover:scale-[1.03] ${
+            item.fit === 'contain' ? 'object-contain' : 'object-cover'
+          }`}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-transparent opacity-80" />
-        <span className={`absolute top-4 left-4 ${TAG} bg-[#080808]/70 backdrop-blur-sm px-2 py-1 rounded`}>
-          {item.tag}
-        </span>
+        {/* The bottom scrim would dim a screenshot's own content, so it only
+            applies to photographs. */}
+        {item.fit !== 'contain' && (
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-transparent opacity-80" />
+        )}
+        {/* Overlaid on photographs; on screenshots it would land on their own
+            content, so those carry the tag in the body instead. */}
+        {item.fit !== 'contain' && (
+          <span className={`absolute top-4 left-4 ${TAG} bg-[#080808]/70 backdrop-blur-sm px-2 py-1 rounded`}>
+            {item.tag}
+          </span>
+        )}
       </div>
       <div className="p-5">
+        {item.fit === 'contain' && <p className={`${TAG} mb-2`}>{item.tag}</p>}
         <h4 className={`${TITLE} text-2xl mb-2`}>{item.title}</h4>
         <p className="text-sm opacity-70 leading-relaxed">{item.caption}</p>
         {item.meta && (
@@ -51,47 +66,6 @@ function PhotoCard({ item }: { item: Extract<BragItem, { kind: 'photo' }> }) {
         <div className="mt-3">
           <SourceLink href={item.href} label="Source" />
         </div>
-      </div>
-    </div>
-  );
-}
-
-function PostCard({ item }: { item: Extract<BragItem, { kind: 'post' }> }) {
-  const Icon = item.platform === 'x' ? FaXTwitter : FaInstagram;
-  const initials = item.author.split(' ').map(w => w[0]).join('').slice(0, 2);
-
-  return (
-    <div className={`${CARD} p-5`}>
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-full bg-[#2563EB]/15 border border-[#2563EB]/30 flex items-center justify-center shrink-0">
-            <span className="text-[11px] font-black font-display tracking-tighter accent-text">{initials}</span>
-          </div>
-          <div className="min-w-0">
-            <div className="text-sm font-bold leading-tight truncate">{item.author}</div>
-            <div className="text-[11px] opacity-40 leading-tight truncate">{item.handle}</div>
-          </div>
-        </div>
-        <Icon size={15} className="opacity-30 shrink-0 mt-1" />
-      </div>
-
-      <p className="text-sm opacity-80 leading-relaxed mb-4">{item.text}</p>
-
-      <div className="flex flex-wrap gap-x-5 gap-y-2 pt-4 border-t border-white/5">
-        {item.stats.map(stat => (
-          <div key={stat.label}>
-            <div className="text-base font-black font-display tracking-tighter accent-text leading-none">
-              {stat.value}
-            </div>
-            <div className="text-[9px] uppercase tracking-[0.2em] opacity-35 mt-1">{stat.label}</div>
-          </div>
-        ))}
-      </div>
-
-      <p className="font-mono text-[10px] opacity-35 mt-4 leading-relaxed">{item.note}</p>
-      <div className="flex items-center justify-between mt-3">
-        <span className="font-mono text-[10px] opacity-30">{item.date}</span>
-        <SourceLink href={item.href} label="View post" />
       </div>
     </div>
   );
@@ -171,7 +145,6 @@ function CourseCard({ item }: { item: Extract<BragItem, { kind: 'course' }> }) {
 function BragCard({ item }: { item: BragItem }) {
   switch (item.kind) {
     case 'photo': return <PhotoCard item={item} />;
-    case 'post': return <PostCard item={item} />;
     case 'video': return <VideoCard item={item} />;
     case 'course': return <CourseCard item={item} />;
   }
@@ -179,8 +152,6 @@ function BragCard({ item }: { item: BragItem }) {
 
 export function BragWall() {
   return (
-    // relative z-10 keeps this above the pinned Featured Work section's
-    // decorative layer, which overhangs the sections that follow it.
     <section id="proof" className="relative z-10 scroll-mt-28 py-32 px-6 md:px-12 border-t border-white/5">
       <div className="mb-16 border-l-2 border-[#2563EB] pl-6">
         <h2 className="text-[10px] uppercase tracking-widest accent-text mb-4">Receipts</h2>
