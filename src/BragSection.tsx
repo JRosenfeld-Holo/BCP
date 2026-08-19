@@ -214,11 +214,24 @@ export function TestimonialCarousel() {
                   &ldquo;{item.quote}&rdquo;
                 </p>
                 <div className="mt-8 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#2563EB]/15 border border-[#2563EB]/30 flex items-center justify-center shrink-0">
-                    <span className="text-[11px] font-black font-display tracking-tighter accent-text">
-                      {item.name.split(/[\s-]/).map(w => w[0]).join('').slice(0, 2)}
-                    </span>
-                  </div>
+                  {item.photo ? (
+                    <img
+                      src={item.photo}
+                      alt=""
+                      loading="lazy"
+                      width={44}
+                      height={44}
+                      className="w-11 h-11 rounded-full object-cover border border-[#2563EB]/30 shrink-0"
+                    />
+                  ) : (
+                    /* No photo for the workshop attendees — initials rather than
+                       a stock face standing in for a real person. */
+                    <div className="w-11 h-11 rounded-full bg-[#2563EB]/15 border border-[#2563EB]/30 flex items-center justify-center shrink-0">
+                      <span className="text-[11px] font-black font-display tracking-tighter accent-text">
+                        {item.name.split(/[\s-]/).map(w => w[0]).join('').slice(0, 2)}
+                      </span>
+                    </div>
+                  )}
                   <div className="min-w-0">
                     <div className="text-sm font-bold leading-tight">{item.name}</div>
                     <div className="text-xs opacity-40 leading-tight">
