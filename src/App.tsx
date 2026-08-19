@@ -233,13 +233,13 @@ function HomePage() {
       <HeroSection />
       <LogoMarquee />
       <AboutSection />
-      <BragWall />
       <ServicesSection />
+      {/* Deck then case studies: the deck names the brands, the case studies
+          prove them. Receipts closes the proof run just before the CTA. */}
+      <FeaturedWorkSection />
       <CaseStudySection />
       <TestimonialCarousel />
-      {/* The featured deck closes the page: proof of work leads, brand
-          recognition closes. The logo strip stays under the hero. */}
-      <FeaturedWorkSection />
+      <BragWall />
       <Suspense fallback={<div className="h-screen border-t border-white/5" />}>
         <FunnelSection />
       </Suspense>
